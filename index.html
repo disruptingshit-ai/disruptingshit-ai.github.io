@@ -88,10 +88,12 @@ const W = c.width, H = c.height;
 
 // ── Cursor ────────────────────────────────────────────────────────
 let mx = W/2, my = H/2, smx = W/2, smy = H/2;
+let hasStarted = false;   // true cuando el usuario mueve el mouse por primera vez
 let manifesto = document.getElementById('manifesto');
 let manifestoGone = false;
 document.addEventListener('mousemove', e => {
   mx=e.clientX; my=e.clientY;
+  if (!hasStarted) { smx=mx; smy=my; hasStarted=true; }   // snap cursor al primer movimiento
   if (!manifestoGone) { manifestoGone=true; setTimeout(()=>manifesto.classList.add('hidden'),1000); }
   // Pointer cursor near clickable products
   let nearLink = PRODUCT_PARTICLES && PRODUCT_PARTICLES.some(p => {
@@ -103,6 +105,7 @@ document.addEventListener('mousemove', e => {
 });
 document.addEventListener('touchmove', e => {
   mx=e.touches[0].clientX; my=e.touches[0].clientY;
+  if (!hasStarted) { smx=mx; smy=my; hasStarted=true; }
   if (!manifestoGone) { manifestoGone=true; setTimeout(()=>manifesto.classList.add('hidden'),1000); }
 }, {passive:true});
 
@@ -384,6 +387,13 @@ function updateHint() {
 
 let t=0;
 function loop() {
+  // Esperar primer movimiento del usuario — pantalla negra estática hasta entonces
+  if (!hasStarted) {
+    ctx.fillStyle='#000'; ctx.fillRect(0,0,W,H);
+    requestAnimationFrame(loop);
+    return;
+  }
+
   t+=0.014;
   smx+=(mx-smx)*0.07; smy+=(my-smy)*0.07;
   collapseT+= ((collapsed?1:0)-collapseT)*0.045;
