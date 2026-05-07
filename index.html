@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DS · Blind Collapse</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap');
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:#000; overflow:hidden; cursor:none; font-family:'Space Mono',monospace; }
+  canvas { display:block; }
+  #ds {
+    position:fixed; top:28px; left:32px; pointer-events:none; z-index:10;
+  }
+  #ds h2 { font-size:13px; color:rgba(255,255,255,0.65); letter-spacing:0.25em; font-weight:700; text-transform:uppercase; }
+  #ds p  { font-size:9px; color:rgba(255,255,255,0.22); letter-spacing:0.22em; margin-top:5px; font-style:italic; }
+  #hint {
+    position:fixed; bottom:32px; left:50%; transform:translateX(-50%);
+    font-size:9px; color:rgba(255,255,255,0.18); letter-spacing:0.3em;
+    text-transform:uppercase; text-align:center; pointer-events:none; white-space:nowrap;
+  }
+  #ncount {
+    position:fixed; top:28px; right:32px;
+    font-size:9px; color:rgba(255,255,255,0.20); letter-spacing:0.2em;
+    text-transform:uppercase; pointer-events:none;
+  }
+  #manifesto {
+    position:fixed; top:50%; left:50%; transform:translate(-50%,-50%);
+    text-align:center; pointer-events:none; z-index:5;
+    transition: opacity 1.5s ease;
+  }
+  #manifesto .line1 {
+    font-size:clamp(14px,2.2vw,26px); color:rgba(255,255,255,0.85);
+    letter-spacing:0.18em; font-weight:700; text-transform:uppercase;
+    line-height:1.6;
+  }
+  #manifesto .line2 {
+    font-size:clamp(10px,1.3vw,15px); color:rgba(255,255,255,0.30);
+    letter-spacing:0.28em; margin-top:10px; font-style:italic;
+  }
+  #manifesto.hidden { opacity:0; }
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div id="ds">
+  <h2>DisruptingShit</h2>
+  <p>we build what others won't touch</p>
+</div>
+<div id="manifesto">
+  <div class="line1">we build what<br>others won't touch</div>
+  <div class="line2">move to look the other way</div>
+</div>
+<div id="hint">move · what you don't look at directly is what's actually there · click to collapse</div>
+
+<script>
+const c = document.getElementById('c');
+const ctx = c.getContext('2d');
+c.width = window.innerWidth; c.height = window.innerHeight;
+const W = c.width, H = c.height;
+
+// ── Cursor ────────────────────────────────────────────────────────
+let mx = W/2, my = H/2, smx = W/2, smy = H/2;
+let manifesto = document.getElementById('manifesto');
+let manifestoGone = false;
+document.addEventListener('mousemove', e => {
+  mx=e.clientX; my=e.clientY;
+  if (!manifestoGone) { manifesto.classList.add('hidden'); manifestoGone=true; }
+  // Pointer cursor near clickable products
+  let nearLink = PRODUCT_PARTICLES && PRODUCT_PARTICLES.some(p => {
+    if (!p.url || p.alpha < 0.1) return false;
+    const dx=e.clientX-p.x, dy=e.clientY-p.y;
+    return Math.sqrt(dx*dx+dy*dy) < 48;
+  });
+  c.style.cursor = nearLink ? 'pointer' : 'none';
+});
+document.addEventListener('touchmove', e => {
+  mx=e.touches[0].clientX; my=e.touches[0].clientY;
+  if (!manifestoGone) { manifesto.classList.add('hidden'); manifestoGone=true; }
+}, {passive:true});
+
+// ── PRODUCTOS (empiezan ocultos, se revelan en el blind spot ring) ─
+const PRODUCTS = [
+  { text:'Agente LFT',        sub:'tu jefe no sabe que existes',          color:'#ff6b6b', url:'/agentelft/' },
+  { text:'Juicio x $99',      sub:'acceso a justicia sin toga',            color:'#6bcb77', url:null },
+  { text:'IA Testigo',        sub:'prueba digital que los jueces odian',   color:'#4d96ff', url:null },
+  { text:'Contrato Trampa',   sub:'detecta cláusulas abusivas al instante',color:'#c77dff', url:null },
+  { text:'Burocracia Cero',   sub:'trámites de gobierno · sin colas',      color:'#ff9f1c', url:null },
+];
+
+// Partículas de producto — orbitan en distintos radios
+const PRODUCT_PARTICLES = PRODUCTS.map((p, i) => {
+  const angle = (i / PRODUCTS.length) * Math.PI * 2 + Math.random() * 0.4;
+  const orbitR = 180 + Math.random() * 200;
+  return {
+    ...p,
+    angle,
+    orbitR,
+    orbitSpeed: (Math.random() < 0.5 ? 1 : -1) * (0.0003 + Math.random() * 0.0004),
+    x: W/2 + Math.cos(angle) * orbitR,
+    y: H/2 + Math.sin(angle) * orbitR,
+    alpha: 0,
+    revealed: false,
+    revealT: 0,
+  };
+});
+
+// Partículas de ruido / ideas flotantes
+const NOISE_WORDS = [
+  'entropy','∂/∂t','ψ','fourier','signal','chaos→order','∑','non-consensus',
+  'bayes','gödel','edge case','build anyway','second order','eigenvalue',
+  'Δ','∞','p≠np?','look away','others won\'t touch','contrarian',
+  'emergence','paradigm','raw signal','noise is data','unseen',
+];
+const NOISE = Array.from({length:55}, (_,i) => ({
+  word: NOISE_WORDS[i % NOISE_WORDS.length],
+  x: Math.random()*W, y: Math.random()*H,
+  vx:(Math.random()-0.5)*0.22, vy:(Math.random()-0.5)*0.22,
+  size: 8+Math.random()*6,
+  baseAlpha: 0.04+Math.random()*0.08,
+  alpha:0, phase:Math.random()*Math.PI*2,
+}));
+
+// ── MAINSTREAM: flechas apuntando al consenso ──────────────────────
+const CONSENSUS_X = W*0.70, CONSENSUS_Y = H*0.36;
+const ARROWS = [];
+for (let r=0;r<Math.floor(H/52);r++) {
+  for (let co=0;co<Math.floor(W/52);co++) {
+    ARROWS.push({
+      x: 26+co*52+(Math.random()-0.5)*8,
+      y: 26+r*52+(Math.random()-0.5)*8,
+      phase: Math.random()*Math.PI*2,
+    });
+  }
+}
+
+// ── WAVE FUNCTION: colapso ────────────────────────────────────────
+let collapseT    = 0;   // 0=expandido 1=colapsado
+let collapsed    = false;
+let collapseX    = CONSENSUS_X;
+let collapseY    = CONSENSUS_Y;
+
+c.addEventListener('click', e => {
+  // Check if clicking on a product particle with a URL
+  for (const p of PRODUCT_PARTICLES) {
+    if (!p.url || p.alpha < 0.1) continue;
+    const dx = e.clientX - p.x, dy = e.clientY - p.y;
+    if (Math.sqrt(dx*dx+dy*dy) < 48) { window.location.href = p.url; return; }
+  }
+  collapsed = !collapsed;
+  if (collapsed) { collapseX=e.clientX; collapseY=e.clientY; }
+});
+document.addEventListener('touchend', e => {
+  const tx=e.changedTouches[0].clientX, ty=e.changedTouches[0].clientY;
+  for (const p of PRODUCT_PARTICLES) {
+    if (!p.url || p.alpha < 0.1) continue;
+    const dx = tx - p.x, dy = ty - p.y;
+    if (Math.sqrt(dx*dx+dy*dy) < 48) { window.location.href = p.url; return; }
+  }
+  collapsed = !collapsed;
+  if (collapsed) { collapseX=tx; collapseY=ty; }
+});
+
+// ── Radio del punto ciego y zona reveal ───────────────────────────
+const BLIND_R  = 100;
+const REVEAL_R = 220;
+
+// ── Interference waves ────────────────────────────────────────────
+const WAVE_SOURCES = [
+  [W*0.18,H*0.28],[W*0.78,H*0.25],[W*0.5,H*0.72],
+  [W*0.12,H*0.68],[W*0.88,H*0.62],
+];
+
+function drawWaves(t) {
+  const alpha = (1-collapseT)*0.055;
+  if (alpha<0.004) return;
+  ctx.save();
+  for (const [sx,sy] of WAVE_SOURCES) {
+    for (let ring=0;ring<7;ring++) {
+      const r = ((t*38+ring*52)%380)+10;
+      ctx.beginPath(); ctx.arc(sx,sy,r,0,Math.PI*2);
+      ctx.strokeStyle=`rgba(70,120,255,${alpha*(1-r/400)})`;
+      ctx.lineWidth=0.5; ctx.stroke();
+    }
+  }
+  ctx.restore();
+}
+
+function drawGrid(t) {
+  // Grid de puntos de probabilidad cuántica
+  const step=45;
+  for (let px=0;px<W;px+=step) {
+    for (let py=0;py<H;py+=step) {
+      let prob = 0.5*Math.sin(px*0.014-t*0.7+py*0.009)
+               + 0.3*Math.sin(px*0.022+t*0.4-py*0.015)
+               + 0.2*Math.cos(px*0.009-py*0.011+t*0.5);
+      prob *= (1-collapseT*0.92);
+      const a = Math.abs(prob)*0.10;
+      if(a<0.003) continue;
+      const blue=Math.floor(140+prob*80);
+      ctx.fillStyle=`rgba(80,80,${Math.max(80,blue)},${a})`;
+      ctx.fillRect(px-1,py-1,2,2);
+    }
+  }
+}
+
+function drawMainstreamArrows(t) {
+  for (const a of ARROWS) {
+    const dx=CONSENSUS_X-a.x, dy=CONSENSUS_Y-a.y;
+    const dist=Math.sqrt(dx*dx+dy*dy);
+    if (dist<55) continue;
+    const angle=Math.atan2(dy,dx);
+    const dcx=a.x-smx, dcy=a.y-smy;
+    const dc=Math.sqrt(dcx*dcx+dcy*dcy);
+
+    let alpha = (0.05+0.02*Math.sin(t*0.6+a.phase)) * (1-collapseT*0.7);
+    let drawAngle=angle;
+    if (dc<BLIND_R) { alpha=0; }
+    else if (dc<REVEAL_R) {
+      const rt=1-(dc-BLIND_R)/(REVEAL_R-BLIND_R);
+      alpha*=(1-rt*0.8);
+      drawAngle=angle+(Math.random()-0.5)*rt*0.6;
+    }
+    if (alpha<0.004) continue;
+
+    const len=9+Math.sin(t*0.7+a.phase)*2;
+    ctx.save();
+    ctx.translate(a.x,a.y); ctx.rotate(drawAngle);
+    ctx.strokeStyle=`rgba(255,255,180,${alpha})`;
+    ctx.lineWidth=0.7;
+    ctx.beginPath();
+    ctx.moveTo(-len*0.3,0); ctx.lineTo(len*0.6,0);
+    ctx.lineTo(len*0.2,-2.5); ctx.moveTo(len*0.6,0); ctx.lineTo(len*0.2,2.5);
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  // Consensus glow
+  const cAlpha = 0.15 + collapseT*0.5;
+  const gr=ctx.createRadialGradient(CONSENSUS_X,CONSENSUS_Y,0,CONSENSUS_X,CONSENSUS_Y,100);
+  gr.addColorStop(0,`rgba(255,255,180,${cAlpha})`);
+  gr.addColorStop(1,'rgba(0,0,0,0)');
+  ctx.fillStyle=gr;
+  ctx.beginPath(); ctx.arc(CONSENSUS_X,CONSENSUS_Y,100,0,Math.PI*2); ctx.fill();
+
+  if (collapseT>0.3) {
+    ctx.font=`${Math.floor(10*collapseT)}px Space Mono`;
+    ctx.textAlign='center'; ctx.fillStyle=`rgba(255,255,180,${0.4*collapseT})`;
+    ctx.fillText('consensus',CONSENSUS_X,CONSENSUS_Y+4);
+    ctx.font=`${Math.floor(8*collapseT)}px Space Mono`;
+    ctx.fillStyle=`rgba(255,255,180,${0.2*collapseT})`;
+    ctx.fillText('(click again to escape)',CONSENSUS_X,CONSENSUS_Y+18);
+  }
+}
+
+function drawNoiseParticles(t) {
+  for (const p of NOISE) {
+    p.x+=p.vx; p.y+=p.vy;
+    if(p.x<-80)p.x=W+40; if(p.x>W+80)p.x=-40;
+    if(p.y<-30)p.y=H+15; if(p.y>H+30)p.y=-15;
+    const dx=p.x-smx,dy=p.y-smy,dc=Math.sqrt(dx*dx+dy*dy);
+    const waveA = p.baseAlpha*(1-collapseT*0.8);
+    if(dc<BLIND_R) p.alpha=0;
+    else if(dc<REVEAL_R) { const rt=1-(dc-BLIND_R)/(REVEAL_R-BLIND_R); p.alpha=waveA+rt*0.25; }
+    else p.alpha=Math.max(0,p.alpha-0.02);
+    if(p.alpha<0.005) continue;
+    ctx.save(); ctx.globalAlpha=p.alpha;
+    ctx.font=`${Math.floor(p.size)}px Space Mono`;
+    ctx.textAlign='left'; ctx.fillStyle='rgba(150,180,255,1)';
+    ctx.fillText(p.word,p.x,p.y);
+    ctx.restore();
+  }
+}
+
+function drawProducts(t) {
+  for (let i=0;i<PRODUCT_PARTICLES.length;i++) {
+    const p=PRODUCT_PARTICLES[i];
+    // Orbitar lentamente
+    p.angle += p.orbitSpeed;
+    // Colapso: converge al consensus
+    const targetX = collapsed
+      ? collapseX + (Math.random()-0.5)*30
+      : W/2 + Math.cos(p.angle)*p.orbitR;
+    const targetY = collapsed
+      ? collapseY + (Math.random()-0.5)*30
+      : H/2 + Math.sin(p.angle)*p.orbitR;
+
+    p.x += (targetX-p.x)*0.03;
+    p.y += (targetY-p.y)*0.03;
+
+    const dx=p.x-smx, dy=p.y-smy, dc=Math.sqrt(dx*dx+dy*dy);
+
+    // Alpha: visible en zona reveal, casi invisible otherwise, desaparece en colapso
+    let targetAlpha=0;
+    if (!collapsed) {
+      if(dc>BLIND_R && dc<REVEAL_R) {
+        const rt=1-(dc-BLIND_R)/(REVEAL_R-BLIND_R);
+        targetAlpha=rt*0.95;
+        p.revealed=true;
+      } else if(p.revealed && dc>=REVEAL_R) {
+        targetAlpha=0.06;
+      }
+    } else {
+      targetAlpha=0.04*(1-collapseT);
+    }
+    p.alpha+=(targetAlpha-p.alpha)*0.08;
+    if(p.alpha<0.01) continue;
+
+    ctx.save(); ctx.globalAlpha=p.alpha;
+
+    // Punto
+    const pulse=4+2*Math.sin(t*1.5+i);
+    const gr=ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,pulse*4);
+    gr.addColorStop(0,p.color); gr.addColorStop(1,'transparent');
+    ctx.fillStyle=gr; ctx.beginPath(); ctx.arc(p.x,p.y,pulse*4,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle=p.color; ctx.beginPath(); ctx.arc(p.x,p.y,pulse,0,Math.PI*2); ctx.fill();
+
+    // Texto
+    ctx.shadowColor=p.color; ctx.shadowBlur=14;
+    ctx.font='bold 12px Space Mono'; ctx.textAlign='left';
+    ctx.fillStyle=p.color; ctx.fillText(p.text,p.x+12,p.y+3);
+    ctx.shadowBlur=0;
+    ctx.font='8px Space Mono'; ctx.fillStyle=`rgba(255,255,255,${p.alpha*0.6})`;
+    ctx.fillText(p.sub,p.x+12,p.y+15);
+
+    ctx.restore();
+  }
+}
+
+function drawBlindSpotRing() {
+  // Zona reveal: glow tenue
+  const gr=ctx.createRadialGradient(smx,smy,BLIND_R,smx,smy,REVEAL_R);
+  gr.addColorStop(0,'rgba(255,255,255,0.03)');
+  gr.addColorStop(1,'rgba(0,0,0,0)');
+  ctx.fillStyle=gr; ctx.beginPath(); ctx.arc(smx,smy,REVEAL_R,0,Math.PI*2); ctx.fill();
+
+  // Borde del blind spot (punteado)
+  ctx.beginPath(); ctx.arc(smx,smy,BLIND_R,0,Math.PI*2);
+  ctx.strokeStyle='rgba(255,255,255,0.07)';
+  ctx.lineWidth=1; ctx.setLineDash([3,9]); ctx.stroke(); ctx.setLineDash([]);
+
+  // Cruz
+  const cs=5;
+  ctx.strokeStyle='rgba(255,255,255,0.45)'; ctx.lineWidth=1;
+  ctx.beginPath();
+  ctx.moveTo(smx-cs,smy); ctx.lineTo(smx+cs,smy);
+  ctx.moveTo(smx,smy-cs); ctx.lineTo(smx,smy+cs);
+  ctx.stroke();
+}
+
+function updateHint() {
+  const nc = document.getElementById('ncount');
+  if (!nc) return;
+  const rev = PRODUCT_PARTICLES.filter(p=>p.revealed).length;
+  nc.textContent = rev > 0 ? `${rev} / ${PRODUCT_PARTICLES.length} discovered` : '';
+}
+
+let t=0;
+function loop() {
+  t+=0.014;
+  smx+=(mx-smx)*0.07; smy+=(my-smy)*0.07;
+  collapseT+= ((collapsed?1:0)-collapseT)*0.045;
+
+  ctx.fillStyle='rgba(0,0,0,0.20)'; ctx.fillRect(0,0,W,H);
+
+  drawGrid(t);
+  drawWaves(t);
+  drawMainstreamArrows(t);
+  drawNoiseParticles(t);
+  drawProducts(t);
+  drawBlindSpotRing();
+  updateHint();
+
+  requestAnimationFrame(loop);
+}
+
+ctx.fillStyle='#000'; ctx.fillRect(0,0,W,H);
+loop();
+window.addEventListener('resize',()=>location.reload());
+</script>
+</body>
+</html>
