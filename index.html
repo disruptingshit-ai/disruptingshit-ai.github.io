@@ -39,6 +39,29 @@
     letter-spacing:0.28em; margin-top:10px; font-style:italic;
   }
   #manifesto.hidden { opacity:0; }
+  #nav-buttons {
+    position:fixed; bottom:32px; right:32px;
+    display:flex; gap:12px; z-index:20;
+  }
+  .ds-btn {
+    font-family:'Space Mono',monospace;
+    font-size:8px; font-weight:700; letter-spacing:0.28em;
+    text-transform:uppercase; text-decoration:none;
+    color:rgba(255,255,255,0.55);
+    border:1px solid rgba(255,255,255,0.18);
+    padding:9px 18px;
+    background:transparent;
+    cursor:pointer;
+    transition: color 0.25s, border-color 0.25s, background 0.25s;
+    white-space:nowrap;
+  }
+  .ds-btn:hover {
+    color:rgba(255,255,255,0.95);
+    border-color:rgba(255,255,255,0.55);
+    background:rgba(255,255,255,0.04);
+  }
+  .ds-btn.accent { color:#ff6b6b; border-color:rgba(255,107,107,0.4); }
+  .ds-btn.accent:hover { color:#ff6b6b; border-color:#ff6b6b; background:rgba(255,107,107,0.06); }
 </style>
 </head>
 <body>
@@ -52,6 +75,10 @@
   <div class="line2">move to look the other way</div>
 </div>
 <div id="hint">move · what you don't look at directly is what's actually there · click to collapse</div>
+<div id="nav-buttons">
+  <a href="/contacto/" class="ds-btn">Contáctanos</a>
+  <a href="/agente-lft/" class="ds-btn accent">Agente LFT →</a>
+</div>
 
 <script>
 const c = document.getElementById('c');
@@ -65,7 +92,7 @@ let manifesto = document.getElementById('manifesto');
 let manifestoGone = false;
 document.addEventListener('mousemove', e => {
   mx=e.clientX; my=e.clientY;
-  if (!manifestoGone) { manifesto.classList.add('hidden'); manifestoGone=true; }
+  if (!manifestoGone) { manifestoGone=true; setTimeout(()=>manifesto.classList.add('hidden'),1000); }
   // Pointer cursor near clickable products
   let nearLink = PRODUCT_PARTICLES && PRODUCT_PARTICLES.some(p => {
     if (!p.url || p.alpha < 0.1) return false;
@@ -76,12 +103,12 @@ document.addEventListener('mousemove', e => {
 });
 document.addEventListener('touchmove', e => {
   mx=e.touches[0].clientX; my=e.touches[0].clientY;
-  if (!manifestoGone) { manifesto.classList.add('hidden'); manifestoGone=true; }
+  if (!manifestoGone) { manifestoGone=true; setTimeout(()=>manifesto.classList.add('hidden'),1000); }
 }, {passive:true});
 
 // ── PRODUCTOS (empiezan ocultos, se revelan en el blind spot ring) ─
 const PRODUCTS = [
-  { text:'Agente LFT',        sub:'tu jefe no sabe que existes',          color:'#ff6b6b', url:'/agentelft/' },
+  { text:'Agente LFT',        sub:'tu jefe no sabe que existes',          color:'#ff6b6b', url:'/agente-lft/' },
   { text:'Juicio x $99',      sub:'acceso a justicia sin toga',            color:'#6bcb77', url:null },
   { text:'IA Testigo',        sub:'prueba digital que los jueces odian',   color:'#4d96ff', url:null },
   { text:'Contrato Trampa',   sub:'detecta cláusulas abusivas al instante',color:'#c77dff', url:null },
