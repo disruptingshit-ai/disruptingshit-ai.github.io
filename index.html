@@ -1,419 +1,1291 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DS · Blind Collapse</title>
+<title>DISRUPTTHINGS — Automatización e IA para PyMEs</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap');
-  * { margin:0; padding:0; box-sizing:border-box; }
-  body { background:#000; overflow:hidden; cursor:none; font-family:'Space Mono',monospace; }
-  canvas { display:block; }
-  #ds {
-    position:fixed; top:28px; left:32px; pointer-events:none; z-index:10;
+  @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&display=swap');
+
+  :root {
+    --black: #0D0D0D;
+    --orange: #E8470A;
+    --orange-dim: rgba(232,71,10,0.15);
+    --light: #F0F0F0;
+    --mid: #999999;
+    --dim: #3A3A3A;
+    --surface: #141414;
+    --surface2: #1A1A1A;
   }
-  #ds h2 { font-size:13px; color:rgba(255,255,255,0.65); letter-spacing:0.25em; font-weight:700; text-transform:uppercase; }
-  #ds p  { font-size:9px; color:rgba(255,255,255,0.22); letter-spacing:0.22em; margin-top:5px; font-style:italic; }
-  #hint {
-    position:fixed; bottom:32px; left:50%; transform:translateX(-50%);
-    font-size:9px; color:rgba(255,255,255,0.18); letter-spacing:0.3em;
-    text-transform:uppercase; text-align:center; pointer-events:none; white-space:nowrap;
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--light);
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-weight: 300;
+    font-size: 14px;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
   }
-  #ncount {
-    position:fixed; top:28px; right:32px;
-    font-size:9px; color:rgba(255,255,255,0.20); letter-spacing:0.2em;
-    text-transform:uppercase; pointer-events:none;
+
+  /* ─── NAV ─── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 18px 56px;
+    background: rgba(13,13,13,0.98);
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.3s;
   }
-  #manifesto {
-    position:fixed; top:50%; left:50%; transform:translate(-50%,-50%);
-    text-align:center; pointer-events:none; z-index:5;
-    transition: opacity 1.5s ease;
+  nav.scrolled { border-bottom-color: var(--dim); }
+
+  .logo-nav {
+    font-size: 13px; letter-spacing: 3px;
+    text-decoration: none; color: var(--light); display: flex; align-items: baseline;
   }
-  #manifesto .line1 {
-    font-size:clamp(14px,2.2vw,26px); color:rgba(255,255,255,0.85);
-    letter-spacing:0.18em; font-weight:700; text-transform:uppercase;
-    line-height:1.6;
+  .logo-nav .disrup { font-weight: 800; color: #FFFFFF; }
+  .logo-nav .T { color: var(--orange); font-weight: 300; }
+  .logo-nav .hings { font-weight: 300; color: #BBBBBB; }
+
+  .nav-links { display: flex; align-items: center; gap: 36px; list-style: none; }
+  .nav-links a {
+    color: #AAAAAA; text-decoration: none; font-size: 10px;
+    letter-spacing: 3px; text-transform: uppercase; transition: color 0.2s;
+    font-weight: 500;
   }
-  #manifesto .line2 {
-    font-size:clamp(10px,1.3vw,15px); color:rgba(255,255,255,0.30);
-    letter-spacing:0.28em; margin-top:10px; font-style:italic;
+  .nav-links a:hover { color: var(--light); }
+
+  /* LANGUAGE BUTTONS — FIXED */
+  .nav-right {
+    display: flex; align-items: center; gap: 4px;
+    background: var(--surface2);
+    border: 1px solid var(--dim);
+    padding: 4px;
   }
-  #manifesto.hidden { opacity:0; }
-  #nav-buttons {
-    position:fixed; bottom:32px; right:32px;
-    display:flex; gap:12px; z-index:20;
+  .lang-btn {
+    background: none;
+    border: none;
+    color: #888888;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    font-family: inherit;
+    font-weight: 600;
+    padding: 5px 10px;
+    transition: all 0.2s;
+    line-height: 1;
   }
-  .ds-btn {
-    font-family:'Space Mono',monospace;
-    font-size:8px; font-weight:700; letter-spacing:0.28em;
-    text-transform:uppercase; text-decoration:none;
-    color:rgba(255,255,255,0.55);
-    border:1px solid rgba(255,255,255,0.18);
-    padding:9px 18px;
-    background:transparent;
-    cursor:pointer;
-    transition: color 0.25s, border-color 0.25s, background 0.25s;
-    white-space:nowrap;
+  .lang-btn.active {
+    background: var(--orange);
+    color: #FFFFFF;
   }
-  .ds-btn:hover {
-    color:rgba(255,255,255,0.95);
-    border-color:rgba(255,255,255,0.55);
-    background:rgba(255,255,255,0.04);
+  .lang-btn:not(.active):hover {
+    color: var(--light);
+    background: var(--dim);
   }
-  .ds-btn.accent { color:#ff6b6b; border-color:rgba(255,107,107,0.4); }
-  .ds-btn.accent:hover { color:#ff6b6b; border-color:#ff6b6b; background:rgba(255,107,107,0.06); }
+
+  /* ─── HERO ─── */
+  #hero {
+    position: relative; width: 100%; height: 100vh;
+    display: flex; align-items: center; justify-content: center; overflow: hidden;
+    flex-direction: column;
+  }
+
+  /* TIMBIRICHE GAME */
+  #gameWrapper {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden;
+  }
+
+  #timbiricheCanvas {
+    cursor: crosshair;
+    display: block;
+  }
+
+  /* hero overlay gradient so text remains readable */
+  #heroGradient {
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 60% 50% at 50% 50%, transparent 0%, rgba(13,13,13,0.55) 100%);
+    pointer-events: none; z-index: 1;
+  }
+
+  .hero-content {
+    position: relative; z-index: 2; text-align: center; pointer-events: none;
+    padding: 0 20px;
+  }
+
+  .hero-eyebrow {
+    font-size: 9px; letter-spacing: 5px; color: var(--orange);
+    text-transform: uppercase; margin-bottom: 24px;
+    opacity: 0; animation: fadeUp 1s 0.3s forwards;
+    font-weight: 500;
+  }
+
+  .hero-logo {
+    display: flex; align-items: baseline; justify-content: center;
+    line-height: 1; margin-bottom: 10px;
+    opacity: 0; animation: fadeUp 1s 0.5s forwards;
+  }
+  .hl-disrup {
+    font-size: clamp(48px, 8vw, 96px);
+    font-weight: 900; letter-spacing: -4px; color: #FFFFFF;
+    text-shadow: 0 0 40px rgba(255,255,255,0.1);
+  }
+  .hl-t {
+    font-size: clamp(48px, 8vw, 96px);
+    font-weight: 300; letter-spacing: -4px; color: var(--orange);
+    text-shadow: 0 0 30px rgba(232,71,10,0.4);
+  }
+  .hl-hings {
+    font-size: clamp(48px, 8vw, 96px);
+    font-weight: 200; letter-spacing: -4px; color: #CCCCCC;
+  }
+
+  .hero-sub {
+    font-size: 9px; letter-spacing: 8px; color: #888888;
+    text-transform: uppercase; margin-bottom: 48px;
+    opacity: 0; animation: fadeUp 1s 0.7s forwards;
+    font-weight: 500;
+  }
+
+  .hero-tagline {
+    font-size: clamp(14px, 1.8vw, 17px); color: #CCCCCC; font-weight: 300;
+    max-width: 380px; margin: 0 auto 36px; line-height: 1.7;
+    opacity: 0; transition: opacity 0.8s;
+    text-shadow: 0 1px 8px rgba(0,0,0,0.8);
+  }
+  .hero-tagline.visible { opacity: 1; }
+
+  .hero-cta {
+    display: inline-block; pointer-events: all;
+    background: none; border: 1px solid #555555; color: #CCCCCC;
+    padding: 12px 32px; font-size: 9px; letter-spacing: 4px;
+    text-transform: uppercase; text-decoration: none;
+    transition: border-color 0.2s, color 0.2s, background 0.2s;
+    opacity: 0; animation: fadeUp 1s 1s forwards;
+    font-weight: 500;
+  }
+  .hero-cta:hover { border-color: var(--orange); color: var(--orange); background: var(--orange-dim); }
+
+  /* GAME SCORE OVERLAY */
+  #gameScore {
+    position: absolute; top: 80px; right: 20px; z-index: 3;
+    background: rgba(13,13,13,0.85);
+    border: 1px solid var(--dim);
+    padding: 10px 14px;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: #888;
+    letter-spacing: 1px;
+    text-align: right;
+    min-width: 160px;
+    display: none;
+  }
+  #gameScore.active { display: block; }
+  #gameScore .score-line { margin-bottom: 3px; }
+  #gameScore .score-you { color: var(--orange); font-weight: 500; }
+  #gameScore .score-bot { color: #5599FF; font-weight: 500; }
+  #gameScore .score-timer { color: #FFFFFF; font-size: 11px; font-weight: 500; margin-top: 6px; border-top: 1px solid var(--dim); padding-top: 6px; }
+
+  /* EMAIL MODAL */
+  #emailModal {
+    display: none; position: fixed; inset: 0; z-index: 200;
+    background: rgba(0,0,0,0.85);
+    align-items: center; justify-content: center;
+  }
+  #emailModal.open { display: flex; }
+  .modal-box {
+    background: var(--surface);
+    border: 1px solid var(--dim);
+    padding: 40px 44px;
+    max-width: 380px; width: 90%;
+    text-align: center;
+    animation: fadeUp 0.4s forwards;
+  }
+  .modal-eyebrow {
+    font-size: 8px; letter-spacing: 4px; color: var(--orange);
+    text-transform: uppercase; margin-bottom: 12px; font-weight: 500;
+  }
+  .modal-title {
+    font-size: 22px; font-weight: 800; letter-spacing: -1px;
+    margin-bottom: 8px; color: #FFFFFF;
+  }
+  .modal-sub {
+    font-size: 11px; color: #888888; line-height: 1.7;
+    margin-bottom: 24px; font-weight: 300;
+  }
+  .modal-input {
+    width: 100%; background: #111;
+    border: 1px solid var(--dim); border-bottom-color: var(--orange);
+    color: var(--light); padding: 10px 12px;
+    font-size: 12px; font-family: inherit; outline: none;
+    margin-bottom: 12px; transition: border-color 0.2s;
+  }
+  .modal-input:focus { border-color: var(--orange); }
+  .modal-btn {
+    width: 100%; background: var(--orange); border: none;
+    color: #fff; padding: 11px; font-size: 9px; letter-spacing: 4px;
+    text-transform: uppercase; cursor: pointer; font-family: inherit;
+    font-weight: 600; transition: opacity 0.2s;
+  }
+  .modal-btn:hover { opacity: 0.85; }
+  .modal-skip {
+    display: block; margin-top: 12px; font-size: 9px;
+    color: #555; cursor: pointer; letter-spacing: 2px;
+    text-transform: uppercase; text-decoration: underline;
+    transition: color 0.2s;
+  }
+  .modal-skip:hover { color: #888; }
+
+  /* WIN OVERLAY */
+  #winOverlay {
+    display: none; position: absolute; inset: 0; z-index: 4;
+    background: rgba(13,13,13,0.9);
+    align-items: center; justify-content: center; flex-direction: column;
+    text-align: center;
+  }
+  #winOverlay.open { display: flex; }
+  .win-title { font-size: clamp(28px, 5vw, 52px); font-weight: 900; letter-spacing: -2px; margin-bottom: 8px; }
+  .win-sub { font-size: 11px; color: #888; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 24px; font-weight: 500; }
+  .win-time { font-family: 'DM Mono', monospace; font-size: 32px; color: var(--orange); margin-bottom: 24px; font-weight: 500; }
+  .win-restart {
+    background: none; border: 1px solid var(--dim); color: #888;
+    padding: 10px 28px; font-size: 9px; letter-spacing: 4px;
+    text-transform: uppercase; cursor: pointer; font-family: inherit;
+    transition: all 0.2s;
+  }
+  .win-restart:hover { border-color: var(--orange); color: var(--orange); }
+
+  .scroll-hint {
+    position: absolute; bottom: 28px; left: 50%; transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+    color: #444444; font-size: 7px; letter-spacing: 3px; text-transform: uppercase;
+    opacity: 0; animation: fadeUp 1s 1.4s forwards; z-index: 3;
+  }
+  .scroll-line {
+    width: 1px; height: 28px;
+    background: linear-gradient(to bottom, #444, transparent);
+    animation: scrollPulse 2s infinite;
+  }
+
+  /* ─── SECTIONS ─── */
+  section { padding: 96px 0; }
+  .container { max-width: 1040px; margin: 0 auto; padding: 0 56px; }
+
+  .section-label {
+    font-size: 9px; letter-spacing: 4px; color: var(--orange);
+    text-transform: uppercase; margin-bottom: 14px; font-weight: 600;
+  }
+  .section-title {
+    font-size: clamp(26px, 3.2vw, 42px); font-weight: 800;
+    line-height: 1.05; letter-spacing: -1.5px; margin-bottom: 18px;
+    color: #FFFFFF;
+  }
+  .section-desc {
+    font-size: 13px; color: #AAAAAA; max-width: 440px;
+    line-height: 1.9; font-weight: 300;
+  }
+
+  /* SERVICES */
+  #services { background: var(--surface); }
+  .services-header {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 72px;
+    align-items: end; margin-bottom: 56px;
+  }
+  .services-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    border-top: 1px solid var(--dim);
+  }
+  .service-card {
+    padding: 28px 24px; border-right: 1px solid var(--dim);
+    border-bottom: 1px solid var(--dim);
+    transition: background 0.25s; cursor: default; position: relative;
+  }
+  .service-card:nth-child(3n) { border-right: none; }
+  .service-card::after {
+    content: ''; position: absolute; top: 0; left: 0; right: 0;
+    height: 2px; background: var(--orange);
+    transform: scaleX(0); transform-origin: left; transition: transform 0.3s;
+  }
+  .service-card:hover { background: #191919; }
+  .service-card:hover::after { transform: scaleX(1); }
+  .service-num {
+    font-size: 9px; letter-spacing: 2px; color: #555555;
+    margin-bottom: 14px; font-family: 'DM Mono', monospace;
+  }
+  .service-name {
+    font-size: 14px; font-weight: 700; margin-bottom: 9px; line-height: 1.3;
+    color: #EEEEEE;
+  }
+  .service-desc { font-size: 12px; color: #888888; line-height: 1.8; font-weight: 300; margin-bottom: 18px; }
+  .service-price { font-size: 11px; color: var(--orange); font-family: 'DM Mono', monospace; font-weight: 500; }
+
+  /* INDUSTRIES */
+  #industries { background: var(--black); }
+  .industries-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 72px; align-items: center; }
+  .industry-list { list-style: none; }
+  .industry-item {
+    display: flex; align-items: center; gap: 14px;
+    padding: 13px 0; border-bottom: 1px solid #1C1C1C;
+    cursor: default; transition: all 0.2s;
+  }
+  .industry-item:hover .industry-dot { background: var(--orange); }
+  .industry-item:hover .industry-name { color: var(--light); }
+  .industry-dot { width: 4px; height: 4px; border-radius: 50%; background: #444; flex-shrink: 0; transition: background 0.2s; }
+  .industry-name { font-size: 15px; font-weight: 300; color: #AAAAAA; letter-spacing: -0.2px; transition: color 0.2s; }
+  .industries-right { padding: 32px; background: var(--surface); }
+  .industries-stat { font-size: 52px; font-weight: 900; color: var(--orange); line-height: 1; margin-bottom: 6px; letter-spacing: -2px; }
+  .industries-stat-label { font-size: 10px; color: #888; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 28px; line-height: 1.7; font-weight: 500; }
+  .industries-quote { font-size: 13px; line-height: 1.9; color: #555; font-weight: 300; font-style: italic; }
+
+  /* PRICING */
+  #pricing { background: var(--surface); }
+  .pricing-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 72px; }
+  .chat-container { background: var(--black); border: 1px solid var(--dim); height: 460px; display: flex; flex-direction: column; }
+  .chat-header { padding: 11px 14px; border-bottom: 1px solid var(--dim); display: flex; align-items: center; gap: 7px; }
+  .chat-dot { width: 5px; height: 5px; border-radius: 50%; }
+  .chat-title { font-size: 9px; letter-spacing: 3px; color: #777; text-transform: uppercase; flex: 1; font-weight: 500; }
+  .chat-status { font-size: 9px; color: var(--orange); letter-spacing: 1px; font-weight: 500; }
+  .chat-messages { flex: 1; overflow-y: auto; padding: 14px; display: flex; flex-direction: column; gap: 9px; }
+  .chat-messages::-webkit-scrollbar { width: 1px; }
+  .chat-messages::-webkit-scrollbar-thumb { background: var(--dim); }
+  .msg { max-width: 88%; font-size: 12px; line-height: 1.75; padding: 8px 11px; font-weight: 300; }
+  .msg.bot { background: var(--surface); color: #DDDDDD; border-left: 2px solid var(--orange); align-self: flex-start; }
+  .msg.user { background: #1A1A1A; color: #999; align-self: flex-end; border-right: 1px solid var(--dim); }
+  .typing-dots span { display: inline-block; width: 4px; height: 4px; border-radius: 50%; background: var(--orange); margin: 0 2px; animation: blink 1.2s infinite; }
+  .typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+  .typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+  .chat-input-area { padding: 9px; border-top: 1px solid var(--dim); display: flex; gap: 6px; }
+  .chat-input { flex: 1; background: #111; border: none; color: var(--light); padding: 8px 11px; font-size: 12px; font-family: inherit; font-weight: 300; outline: none; }
+  .chat-input::placeholder { color: #444; }
+  .chat-send { background: none; border: 1px solid var(--dim); color: #888; padding: 8px 16px; font-size: 9px; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; font-family: inherit; transition: all 0.2s; font-weight: 600; }
+  .chat-send:hover { border-color: var(--orange); color: var(--orange); }
+  .pricing-info { padding: 4px 0; }
+  .pricing-note { font-size: 11px; color: #666; letter-spacing: 0.3px; margin-bottom: 24px; line-height: 1.9; }
+  .pricing-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px; }
+  .tag { padding: 6px 12px; border: 1px solid var(--dim); font-size: 9px; letter-spacing: 2px; color: #888; text-transform: uppercase; cursor: pointer; transition: all 0.2s; font-weight: 500; }
+  .tag:hover { border-color: var(--orange); color: var(--orange); }
+
+  /* CONTACT */
+  #contact { background: var(--black); text-align: center; padding: 128px 0; }
+  .contact-title { font-size: clamp(36px, 7vw, 80px); font-weight: 900; line-height: 0.92; letter-spacing: -3px; margin-bottom: 44px; }
+  .contact-line { display: block; color: #FFFFFF; }
+  .contact-line.accent { color: var(--orange); font-weight: 300; }
+  .contact-line.muted { color: #444; }
+  .contact-links { display: flex; justify-content: center; gap: 44px; margin-top: 52px; flex-wrap: wrap; }
+  .contact-link { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: #888; text-decoration: none; transition: color 0.2s; font-weight: 500; }
+  .contact-link:hover { color: var(--orange); }
+
+  /* FOOTER */
+  footer { padding: 24px 56px; border-top: 1px solid #1A1A1A; display: flex; align-items: center; justify-content: space-between; }
+  .footer-logo { font-size: 11px; letter-spacing: 3px; color: #666; display: flex; align-items: baseline; }
+  .footer-logo .disrup { font-weight: 800; color: #888; }
+  .footer-logo .T { color: var(--orange); }
+  .footer-logo .hings { font-weight: 300; }
+  .footer-copy { font-size: 9px; color: #444; letter-spacing: 1px; }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes blink {
+    0%, 80%, 100% { transform: scale(0.5); opacity: 0.3; }
+    40% { transform: scale(1); opacity: 1; }
+  }
+  @keyframes scrollPulse {
+    0%, 100% { opacity: 0.1; }
+    50% { opacity: 0.4; }
+  }
+  .reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.7s, transform 0.7s; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  @media (max-width: 860px) {
+    nav { padding: 14px 20px; }
+    .nav-links { display: none; }
+    .services-header { grid-template-columns: 1fr; gap: 16px; }
+    .services-grid { grid-template-columns: 1fr; }
+    .service-card { border-right: 1px solid var(--dim) !important; }
+    .industries-layout { grid-template-columns: 1fr; }
+    .pricing-layout { grid-template-columns: 1fr; }
+    .container { padding: 0 24px; }
+    section { padding: 64px 0; }
+    footer { padding: 20px 24px; }
+    #gameScore { top: 68px; right: 10px; }
+  }
 </style>
 </head>
 <body>
-<canvas id="c"></canvas>
-<div id="ds">
-  <h2>DisruptingShit</h2>
-  <p>we build what others won't touch</p>
+
+<!-- EMAIL MODAL -->
+<div id="emailModal">
+  <div class="modal-box">
+    <p class="modal-eyebrow" id="modalEyebrow" data-es="Connect the Dots" data-en="Connect the Dots" data-ru="Connect the Dots">Connect the Dots</p>
+    <h2 class="modal-title" id="modalTitle" data-es="¿Listo para jugar?" data-en="Ready to play?" data-ru="Готов играть?">¿Listo para jugar?</h2>
+    <p class="modal-sub" id="modalSubtext" data-es="Ingresa tu correo para guardar tu record. Jugarás Timbiriche — conecta puntos para cerrar cuadros antes de que se acabe el tiempo." data-en="Enter your email to save your record. Play Dots & Boxes — close squares before time runs out." data-ru="Введи email, чтобы сохранить рекорд. Игра в точки и квадраты.">Ingresa tu correo para guardar tu record. Jugarás Timbiriche — conecta puntos para cerrar cuadros antes de que se acabe el tiempo.</p>
+    <input type="email" class="modal-input" id="playerEmail" placeholder="tu@correo.com" />
+    <button class="modal-btn" id="startGameBtn" data-es="Jugar →" data-en="Play →" data-ru="Играть →">Jugar →</button>
+    <span class="modal-skip" id="skipModal" data-es="Saltar juego" data-en="Skip game" data-ru="Пропустить">Saltar juego</span>
+  </div>
 </div>
-<div id="manifesto">
-  <div class="line1">we build what<br>others won't touch</div>
-  <div class="line2">move to look the other way</div>
-</div>
-<div id="hint">move · what you don't look at directly is what's actually there · click to collapse</div>
-<div id="nav-buttons">
-  <a href="/contacto/" class="ds-btn">Contáctanos</a>
-  <a href="/agente-lft/" class="ds-btn accent">Agente LFT →</a>
-</div>
+
+<!-- NAV -->
+<nav id="mainNav">
+  <a href="#" class="logo-nav">
+    <span class="disrup">DISRUP</span><span class="T">T</span><span class="hings">HINGS</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#services" data-es="Servicios" data-en="Services" data-ru="Услуги">Servicios</a></li>
+    <li><a href="#industries" data-es="Industrias" data-en="Industries" data-ru="Отрасли">Industrias</a></li>
+    <li><a href="#pricing" data-es="Pricing" data-en="Pricing" data-ru="Цены">Pricing</a></li>
+    <li><a href="#contact" data-es="Contacto" data-en="Contact" data-ru="Контакт">Contacto</a></li>
+  </ul>
+  <div class="nav-right">
+    <button class="lang-btn active" id="langEs" onclick="setLang('es')">ES</button>
+    <button class="lang-btn" id="langEn" onclick="setLang('en')">EN</button>
+    <button class="lang-btn" id="langRu" onclick="setLang('ru')">РУ</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div id="gameWrapper">
+    <canvas id="timbiricheCanvas"></canvas>
+  </div>
+  <div id="heroGradient"></div>
+
+  <!-- Game Score HUD -->
+  <div id="gameScore">
+    <div class="score-line"><span class="score-you" id="hudYou">TÚ: 0</span></div>
+    <div class="score-line"><span class="score-bot" id="hudBot">CPU: 0</span></div>
+    <div class="score-timer" id="hudTimer">03:00</div>
+  </div>
+
+  <!-- Win overlay -->
+  <div id="winOverlay">
+    <div class="win-title" id="winTitle">GANASTE</div>
+    <div class="win-sub" id="winSub">Conectaste los puntos</div>
+    <div class="win-time" id="winTimeDisplay">01:23</div>
+    <button class="win-restart" id="restartBtn" data-es="Jugar de nuevo" data-en="Play again" data-ru="Играть снова">Jugar de nuevo</button>
+  </div>
+
+  <div class="hero-content">
+    <p class="hero-eyebrow"
+      data-es="Automatización · Inteligencia Artificial · PyMEs"
+      data-en="Automation · Artificial Intelligence · SMBs"
+      data-ru="Автоматизация · Искусственный интеллект · МСБ">
+      Automatización · Inteligencia Artificial · PyMEs</p>
+    <div class="hero-logo">
+      <span class="hl-disrup">DISRUP</span><span class="hl-t">T</span><span class="hl-hings">HINGS</span>
+    </div>
+    <p class="hero-sub">AI &nbsp;·&nbsp; AUTOMATION</p>
+    <p class="hero-tagline" id="heroTagline"
+      data-es="Construimos el equipo invisible de tu empresa."
+      data-en="We build your company's invisible team."
+      data-ru="Мы создаём невидимую команду вашей компании.">
+      Construimos el equipo invisible de tu empresa.</p>
+    <a href="#services" class="hero-cta"
+      data-es="Ver cómo →" data-en="See how →" data-ru="Узнать больше →">Ver cómo →</a>
+  </div>
+  <div class="scroll-hint">
+    <div class="scroll-line"></div>
+    <span>scroll</span>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="container">
+    <div class="services-header reveal">
+      <div>
+        <p class="section-label" data-es="Lo que construimos" data-en="What we build" data-ru="Что мы строим">Lo que construimos</p>
+        <h2 class="section-title" data-es="Sistemas que trabajan solos." data-en="Systems that work on their own." data-ru="Системы, которые работают сами.">Sistemas que trabajan solos.</h2>
+      </div>
+      <p class="section-desc" data-es="No vendemos software. Vendemos procesos que funcionan solos — desde un flujo administrativo hasta operaciones complejas de múltiples sistemas." data-en="We don't sell software. We sell processes that run themselves — from an administrative flow to complex multi-system operations." data-ru="Мы не продаём ПО. Мы продаём процессы, которые работают сами.">
+        No vendemos software. Vendemos procesos que funcionan solos — desde un flujo administrativo hasta operaciones complejas de múltiples sistemas.</p>
+    </div>
+    <div class="services-grid reveal">
+      <div class="service-card">
+        <p class="service-num">01</p>
+        <h3 class="service-name" data-es="Automatización de Procesos" data-en="Process Automation" data-ru="Автоматизация процессов">Automatización de Procesos</h3>
+        <p class="service-desc" data-es="Eliminamos trabajo manual. Conectamos sistemas. Hacemos que tus operaciones escalen sin escalar el equipo." data-en="We eliminate manual work. Connect systems. Make operations scale without scaling the team." data-ru="Устраняем ручной труд. Масштабируем без расширения команды.">Eliminamos trabajo manual. Conectamos sistemas. Hacemos que tus operaciones escalen sin escalar el equipo.</p>
+        <p class="service-price">$800 – $8,000 USD</p>
+      </div>
+      <div class="service-card">
+        <p class="service-num">02</p>
+        <h3 class="service-name" data-es="Integración de Sistemas" data-en="System Integration" data-ru="Интеграция систем">Integración de Sistemas</h3>
+        <p class="service-desc" data-es="APIs, bases de datos, plataformas SaaS. Los conectamos para que hablen entre sí sin fricción." data-en="APIs, databases, SaaS platforms. We connect them so data flows without friction." data-ru="API, базы данных, SaaS. Связываем без помех.">APIs, bases de datos, plataformas SaaS. Los conectamos para que hablen entre sí sin fricción.</p>
+        <p class="service-price">$600 – $5,000 USD</p>
+      </div>
+      <div class="service-card">
+        <p class="service-num">03</p>
+        <h3 class="service-name" data-es="Agentes de IA" data-en="AI Agents" data-ru="ИИ-агенты">Agentes de IA</h3>
+        <p class="service-desc" data-es="Agentes que piensan, deciden y ejecutan. Desde atención al cliente hasta análisis financiero." data-en="Agents that think, decide and execute. From customer service to financial analysis." data-ru="Агенты, которые думают, решают и действуют.">Agentes que piensan, deciden y ejecutan. Desde atención al cliente hasta análisis financiero.</p>
+        <p class="service-price">$1,500 – $12,000 USD</p>
+      </div>
+      <div class="service-card">
+        <p class="service-num">04</p>
+        <h3 class="service-name" data-es="Automatización Financiera" data-en="Financial Automation" data-ru="Финансовая автоматизация">Automatización Financiera</h3>
+        <p class="service-desc" data-es="Conciliaciones, reportes, flujos de aprobación con trazabilidad completa." data-en="Reconciliations, reports, approval flows with full traceability." data-ru="Сверки, отчёты, согласования с полной прослеживаемостью.">Conciliaciones, reportes, flujos de aprobación con trazabilidad completa.</p>
+        <p class="service-price">$2,000 – $20,000 USD</p>
+      </div>
+      <div class="service-card">
+        <p class="service-num">05</p>
+        <h3 class="service-name" data-es="Fractional CPO" data-en="Fractional CPO" data-ru="Fractional CPO">Fractional CPO</h3>
+        <p class="service-desc" data-es="Estrategia de producto e IA como servicio. Experiencia corporativa para PyMEs." data-en="Product and AI strategy as a service. Corporate-level experience for SMBs." data-ru="Стратегия продукта и ИИ как услуга.">Estrategia de producto e IA como servicio. Experiencia corporativa para PyMEs.</p>
+        <p class="service-price">$3,000 – $8,000 / mes</p>
+      </div>
+      <div class="service-card">
+        <p class="service-num">06</p>
+        <h3 class="service-name" data-es="Workshops" data-en="Workshops" data-ru="Воркшопы">Workshops</h3>
+        <p class="service-desc" data-es="Sesiones intensivas para que tu equipo aproveche la automatización y la IA." data-en="Intensive sessions so your team leverages automation and AI." data-ru="Интенсивные сессии для освоения автоматизации и ИИ.">Sesiones intensivas para que tu equipo aproveche la automatización y la IA.</p>
+        <p class="service-price">$800 – $3,500 USD</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- INDUSTRIES -->
+<section id="industries">
+  <div class="container">
+    <div class="industries-layout reveal">
+      <div>
+        <p class="section-label" data-es="Para quién" data-en="Who we serve" data-ru="Кому">Para quién</p>
+        <h2 class="section-title" data-es="Cualquier industria con procesos repetitivos." data-en="Any industry with repetitive processes." data-ru="Любая отрасль с повторяющимися процессами.">Cualquier industria con procesos repetitivos.</h2>
+        <ul class="industry-list" style="margin-top:28px">
+          <li class="industry-item"><span class="industry-dot"></span><span class="industry-name" data-es="Servicios Financieros" data-en="Financial Services" data-ru="Финансовые услуги">Servicios Financieros</span></li>
+          <li class="industry-item"><span class="industry-dot"></span><span class="industry-name" data-es="Legal &amp; Compliance" data-en="Legal &amp; Compliance" data-ru="Юриспруденция">Legal &amp; Compliance</span></li>
+          <li class="industry-item"><span class="industry-dot"></span><span class="industry-name" data-es="Salud &amp; Farmacéutica" data-en="Health &amp; Pharma" data-ru="Здравоохранение">Salud &amp; Farmacéutica</span></li>
+          <li class="industry-item"><span class="industry-dot"></span><span class="industry-name" data-es="Manufactura &amp; Logística" data-en="Manufacturing &amp; Logistics" data-ru="Производство">Manufactura &amp; Logística</span></li>
+          <li class="industry-item"><span class="industry-dot"></span><span class="industry-name" data-es="E-commerce &amp; Retail" data-en="E-commerce &amp; Retail" data-ru="Ритейл">E-commerce &amp; Retail</span></li>
+          <li class="industry-item"><span class="industry-dot"></span><span class="industry-name" data-es="Construcción &amp; Real Estate" data-en="Construction &amp; Real Estate" data-ru="Недвижимость">Construcción &amp; Real Estate</span></li>
+        </ul>
+      </div>
+      <div class="industries-right">
+        <div class="industries-stat">73%</div>
+        <p class="industries-stat-label" data-es="de PyMEs pierden más de 10 horas semanales en tareas automatizables." data-en="of SMBs waste 10+ hours weekly on automatable tasks." data-ru="МСБ теряют более 10 часов в неделю на автоматизируемые задачи.">de PyMEs pierden más de 10 horas semanales en tareas automatizables.</p>
+        <p class="industries-quote" data-es='"No necesitas más gente. Necesitas mejores sistemas."' data-en='"You don't need more people. You need better systems."' data-ru='"Вам не нужно больше людей. Нужны лучшие системы."'>"No necesitas más gente. Necesitas mejores sistemas."</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing">
+  <div class="container">
+    <div class="pricing-layout reveal">
+      <div class="chat-container">
+        <div class="chat-header">
+          <div class="chat-dot" style="background:#E8470A"></div>
+          <div class="chat-dot" style="background:#444"></div>
+          <div class="chat-dot" style="background:#444"></div>
+          <span class="chat-title">DISRUPTTHINGS AGENT</span>
+          <span class="chat-status">● ONLINE</span>
+        </div>
+        <div class="chat-messages" id="chatMessages">
+          <div class="msg bot" data-es="Hola. Soy el agente de DISRUPTTHINGS. ¿En qué puedo ayudarte hoy?" data-en="Hello. I'm the DISRUPTTHINGS agent. How can I help you today?" data-ru="Привет. Я агент DISRUPTTHINGS. Чем могу помочь?">Hola. Soy el agente de DISRUPTTHINGS. ¿En qué puedo ayudarte hoy?</div>
+        </div>
+        <div class="chat-input-area">
+          <input type="text" class="chat-input" id="chatInput" data-es="Escribe algo..." data-en="Type something..." data-ru="Напишите..." placeholder="Escribe algo...">
+          <button class="chat-send" id="chatSend" data-es="Enviar" data-en="Send" data-ru="Отправить">Enviar</button>
+        </div>
+      </div>
+      <div class="pricing-info">
+        <p class="section-label" data-es="Cómo trabajamos" data-en="How we work" data-ru="Как мы работаем">Cómo trabajamos</p>
+        <h2 class="section-title" data-es="Sin retainers forzados." data-en="No forced retainers." data-ru="Без навязанных контрактов.">Sin retainers forzados.</h2>
+        <p class="pricing-note" data-es="Proyectos fijos o mensualidades. Entregamos en semanas, no meses. Cada automatización tiene ROI medible antes de firmar." data-en="Fixed projects or monthly. We deliver in weeks, not months. Every automation has measurable ROI before signing." data-ru="Фиксированные проекты или помесячно. Доставляем за недели, не месяцы.">Proyectos fijos o mensualidades. Entregamos en semanas, no meses. Cada automatización tiene ROI medible antes de firmar.</p>
+        <div class="pricing-tags">
+          <span class="tag" data-es="N8N" data-en="N8N" data-ru="N8N">N8N</span>
+          <span class="tag" data-es="Make" data-en="Make" data-ru="Make">Make</span>
+          <span class="tag" data-es="Claude AI" data-en="Claude AI" data-ru="Claude AI">Claude AI</span>
+          <span class="tag" data-es="Zapier" data-en="Zapier" data-ru="Zapier">Zapier</span>
+          <span class="tag" data-es="WhatsApp API" data-en="WhatsApp API" data-ru="WhatsApp API">WhatsApp API</span>
+          <span class="tag" data-es="Stripe" data-en="Stripe" data-ru="Stripe">Stripe</span>
+          <span class="tag" data-es="Google Workspace" data-en="Google Workspace" data-ru="Google Workspace">Google Workspace</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="container">
+    <h2 class="contact-title">
+      <span class="contact-line" data-es="¿Listo para" data-en="Ready to" data-ru="Готовы">¿Listo para</span>
+      <span class="contact-line accent" data-es="automatizar?" data-en="automate?" data-ru="автоматизировать?">automatizar?</span>
+      <span class="contact-line muted" data-es="Hablemos." data-en="Let's talk." data-ru="Поговорим.">Hablemos.</span>
+    </h2>
+    <div class="contact-links">
+      <a href="mailto:hola@disruptthings.com" class="contact-link">hola@disruptthings.com</a>
+      <a href="#" class="contact-link" data-es="Agendar llamada" data-en="Book a call" data-ru="Запланировать звонок">Agendar llamada</a>
+      <a href="#" class="contact-link">LinkedIn</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">
+    <span class="disrup">DISRUP</span><span class="T">T</span><span class="hings">HINGS</span>
+  </div>
+  <span class="footer-copy">© 2025 DISRUPTTHINGS</span>
+</footer>
 
 <script>
-const c = document.getElementById('c');
-const ctx = c.getContext('2d');
-c.width = window.innerWidth; c.height = window.innerHeight;
-const W = c.width, H = c.height;
+/* ═══════════════════════════════════════════
+   TIMBIRICHE (DOTS & BOXES) ENGINE
+═══════════════════════════════════════════ */
 
-// ── Cursor ────────────────────────────────────────────────────────
-let mx = W/2, my = H/2, smx = W/2, smy = H/2;
-let hasStarted = false;   // true cuando el usuario mueve el mouse por primera vez
-let manifesto = document.getElementById('manifesto');
-let manifestoGone = false;
-document.addEventListener('mousemove', e => {
-  mx=e.clientX; my=e.clientY;
-  if (!hasStarted) { smx=mx; smy=my; hasStarted=true; }   // snap cursor al primer movimiento
-  if (!manifestoGone) { manifestoGone=true; setTimeout(()=>manifesto.classList.add('hidden'),1000); }
-  // Pointer cursor near clickable products
-  let nearLink = PRODUCT_PARTICLES && PRODUCT_PARTICLES.some(p => {
-    if (!p.url || p.alpha < 0.1) return false;
-    const dx=e.clientX-p.x, dy=e.clientY-p.y;
-    return Math.sqrt(dx*dx+dy*dy) < 48;
-  });
-  c.style.cursor = nearLink ? 'pointer' : 'none';
-});
-document.addEventListener('touchmove', e => {
-  mx=e.touches[0].clientX; my=e.touches[0].clientY;
-  if (!hasStarted) { smx=mx; smy=my; hasStarted=true; }
-  if (!manifestoGone) { manifestoGone=true; setTimeout(()=>manifesto.classList.add('hidden'),1000); }
-}, {passive:true});
+const GRID = 9; // 9x9 dots = 8x8 boxes — denser field
+const GAME_TIME = 180; // 3 minutes
+const PLAYER_COLOR = '#E8470A';
+const BOT_COLOR    = '#5599FF';
+const BOT_DELAY    = 500; // ms
 
-// ── PRODUCTOS (empiezan ocultos, se revelan en el blind spot ring) ─
-const PRODUCTS = [
-  { text:'Agente LFT',        sub:'tu jefe no sabe que existes',          color:'#ff6b6b', url:'/agente-lft/' },
-  { text:'Juicio x $99',      sub:'acceso a justicia sin toga',            color:'#6bcb77', url:null },
-  { text:'IA Testigo',        sub:'prueba digital que los jueces odian',   color:'#4d96ff', url:null },
-  { text:'Contrato Trampa',   sub:'detecta cláusulas abusivas al instante',color:'#c77dff', url:null },
-  { text:'Burocracia Cero',   sub:'trámites de gobierno · sin colas',      color:'#ff9f1c', url:null },
-];
+// Free-play gate: ask email after FREE_LINES lines OR FREE_SECS seconds
+const FREE_LINES = 3;
+const FREE_SECS  = 20;
 
-// Partículas de producto — orbitan en distintos radios
-const PRODUCT_PARTICLES = PRODUCTS.map((p, i) => {
-  const angle = (i / PRODUCTS.length) * Math.PI * 2 + Math.random() * 0.4;
-  const orbitR = 180 + Math.random() * 200;
-  return {
-    ...p,
-    angle,
-    orbitR,
-    orbitSpeed: (Math.random() < 0.5 ? 1 : -1) * (0.0003 + Math.random() * 0.0004),
-    x: W/2 + Math.cos(angle) * orbitR,
-    y: H/2 + Math.sin(angle) * orbitR,
-    alpha: 0,
-    revealed: false,
-    revealT: 0,
-  };
-});
+let canvas, ctx;
+let cellSize, offsetX, offsetY, dotR;
 
-// Partículas de ruido / ideas flotantes
-const NOISE_WORDS = [
-  'entropy','∂/∂t','ψ','fourier','signal','chaos→order','∑','non-consensus',
-  'bayes','gödel','edge case','build anyway','second order','eigenvalue',
-  'Δ','∞','p≠np?','look away','others won\'t touch','contrarian',
-  'emergence','paradigm','raw signal','noise is data','unseen',
-];
-const NOISE = Array.from({length:55}, (_,i) => ({
-  word: NOISE_WORDS[i % NOISE_WORDS.length],
-  x: Math.random()*W, y: Math.random()*H,
-  vx:(Math.random()-0.5)*0.22, vy:(Math.random()-0.5)*0.22,
-  size: 8+Math.random()*6,
-  baseAlpha: 0.04+Math.random()*0.08,
-  alpha:0, phase:Math.random()*Math.PI*2,
-}));
+// State
+let hLines, vLines;       // horizontal & vertical line ownership: 0=none,1=player,2=bot
+let boxes;                // ownership of each box
+let scores = { player: 0, bot: 0 };
+let currentTurn = 'player'; // 'player' | 'bot'
+let gameActive = false;
+let timerInterval = null;
+let timeLeft = GAME_TIME;
+let startTime = null;
+let playerName = '';
 
-// ── MAINSTREAM: flechas apuntando al consenso ──────────────────────
-const CONSENSUS_X = W*0.70, CONSENSUS_Y = H*0.36;
-const ARROWS = [];
-for (let r=0;r<Math.floor(H/52);r++) {
-  for (let co=0;co<Math.floor(W/52);co++) {
-    ARROWS.push({
-      x: 26+co*52+(Math.random()-0.5)*8,
-      y: 26+r*52+(Math.random()-0.5)*8,
-      phase: Math.random()*Math.PI*2,
-    });
+// Free-play gate
+let freeLines = 0;
+let freeTimer = null;
+let gateShown = false;
+
+// hover state
+let hoverLine = null; // {type:'h'|'v', r, c}
+
+function initGame() {
+  hLines = Array.from({ length: GRID }, () => new Array(GRID - 1).fill(0));
+  vLines = Array.from({ length: GRID - 1 }, () => new Array(GRID).fill(0));
+  boxes  = Array.from({ length: GRID - 1 }, () => new Array(GRID - 1).fill(0));
+  scores = { player: 0, bot: 0 };
+  timeLeft = GAME_TIME;
+  currentTurn = 'player';
+  hoverLine = null;
+  freeLines = 0;
+  gameActive = true;
+  startTime = Date.now();
+  updateHUD();
+  drawBoard();
+  startTimer();
+  // Time-based gate
+  if (!gateShown) {
+    clearTimeout(freeTimer);
+    freeTimer = setTimeout(() => { if (!gateShown) showEmailGate(); }, FREE_SECS * 1000);
   }
 }
 
-// ── WAVE FUNCTION: colapso ────────────────────────────────────────
-let collapseT    = 0;   // 0=expandido 1=colapsado
-let collapsed    = false;
-let collapseX    = CONSENSUS_X;
-let collapseY    = CONSENSUS_Y;
-
-c.addEventListener('click', e => {
-  // Check if clicking on a product particle with a URL
-  for (const p of PRODUCT_PARTICLES) {
-    if (!p.url || p.alpha < 0.1) continue;
-    const dx = e.clientX - p.x, dy = e.clientY - p.y;
-    if (Math.sqrt(dx*dx+dy*dy) < 48) { window.location.href = p.url; return; }
-  }
-  collapsed = !collapsed;
-  if (collapsed) { collapseX=e.clientX; collapseY=e.clientY; }
-});
-document.addEventListener('touchend', e => {
-  const tx=e.changedTouches[0].clientX, ty=e.changedTouches[0].clientY;
-  for (const p of PRODUCT_PARTICLES) {
-    if (!p.url || p.alpha < 0.1) continue;
-    const dx = tx - p.x, dy = ty - p.y;
-    if (Math.sqrt(dx*dx+dy*dy) < 48) { window.location.href = p.url; return; }
-  }
-  collapsed = !collapsed;
-  if (collapsed) { collapseX=tx; collapseY=ty; }
-});
-
-// ── Radio del punto ciego y zona reveal ───────────────────────────
-const BLIND_R  = 100;
-const REVEAL_R = 220;
-
-// ── Interference waves ────────────────────────────────────────────
-const WAVE_SOURCES = [
-  [W*0.18,H*0.28],[W*0.78,H*0.25],[W*0.5,H*0.72],
-  [W*0.12,H*0.68],[W*0.88,H*0.62],
-];
-
-function drawWaves(t) {
-  const alpha = (1-collapseT)*0.055;
-  if (alpha<0.004) return;
-  ctx.save();
-  for (const [sx,sy] of WAVE_SOURCES) {
-    for (let ring=0;ring<7;ring++) {
-      const r = ((t*38+ring*52)%380)+10;
-      ctx.beginPath(); ctx.arc(sx,sy,r,0,Math.PI*2);
-      ctx.strokeStyle=`rgba(70,120,255,${alpha*(1-r/400)})`;
-      ctx.lineWidth=0.5; ctx.stroke();
+function startTimer() {
+  clearInterval(timerInterval);
+  timerInterval = setInterval(() => {
+    timeLeft--;
+    updateHUD();
+    if (timeLeft <= 0) {
+      clearInterval(timerInterval);
+      endGame();
     }
-  }
-  ctx.restore();
+  }, 1000);
 }
 
-function drawGrid(t) {
-  // Grid de puntos de probabilidad cuántica
-  const step=45;
-  for (let px=0;px<W;px+=step) {
-    for (let py=0;py<H;py+=step) {
-      let prob = 0.5*Math.sin(px*0.014-t*0.7+py*0.009)
-               + 0.3*Math.sin(px*0.022+t*0.4-py*0.015)
-               + 0.2*Math.cos(px*0.009-py*0.011+t*0.5);
-      prob *= (1-collapseT*0.92);
-      const a = Math.abs(prob)*0.10;
-      if(a<0.003) continue;
-      const blue=Math.floor(140+prob*80);
-      ctx.fillStyle=`rgba(80,80,${Math.max(80,blue)},${a})`;
-      ctx.fillRect(px-1,py-1,2,2);
-    }
-  }
+function updateHUD() {
+  const m = String(Math.floor(timeLeft / 60)).padStart(2, '0');
+  const s = String(timeLeft % 60).padStart(2, '0');
+  document.getElementById('hudTimer').textContent = `${m}:${s}`;
+  document.getElementById('hudYou').textContent = `TÚ: ${scores.player}`;
+  document.getElementById('hudBot').textContent = `CPU: ${scores.bot}`;
 }
 
-function drawMainstreamArrows(t) {
-  for (const a of ARROWS) {
-    const dx=CONSENSUS_X-a.x, dy=CONSENSUS_Y-a.y;
-    const dist=Math.sqrt(dx*dx+dy*dy);
-    if (dist<55) continue;
-    const angle=Math.atan2(dy,dx);
-    const dcx=a.x-smx, dcy=a.y-smy;
-    const dc=Math.sqrt(dcx*dcx+dcy*dcy);
+function endGame() {
+  gameActive = false;
+  clearInterval(timerInterval);
+  const elapsed = Math.floor((Date.now() - startTime) / 1000);
+  const m = String(Math.floor(elapsed / 60)).padStart(2, '0');
+  const s = String(elapsed % 60).padStart(2, '0');
 
-    let alpha = (0.05+0.02*Math.sin(t*0.6+a.phase)) * (1-collapseT*0.7);
-    let drawAngle=angle;
-    if (dc<BLIND_R) { alpha=0; }
-    else if (dc<REVEAL_R) {
-      const rt=1-(dc-BLIND_R)/(REVEAL_R-BLIND_R);
-      alpha*=(1-rt*0.8);
-      drawAngle=angle+(Math.random()-0.5)*rt*0.6;
-    }
-    if (alpha<0.004) continue;
+  const wo = document.getElementById('winOverlay');
+  const wt = document.getElementById('winTitle');
+  const ws = document.getElementById('winSub');
+  const wd = document.getElementById('winTimeDisplay');
 
-    const len=9+Math.sin(t*0.7+a.phase)*2;
-    ctx.save();
-    ctx.translate(a.x,a.y); ctx.rotate(drawAngle);
-    ctx.strokeStyle=`rgba(255,255,180,${alpha})`;
-    ctx.lineWidth=0.7;
-    ctx.beginPath();
-    ctx.moveTo(-len*0.3,0); ctx.lineTo(len*0.6,0);
-    ctx.lineTo(len*0.2,-2.5); ctx.moveTo(len*0.6,0); ctx.lineTo(len*0.2,2.5);
-    ctx.stroke();
-    ctx.restore();
+  if (scores.player > scores.bot) {
+    wt.style.color = PLAYER_COLOR;
+    wt.textContent = currentLang === 'en' ? 'YOU WIN' : currentLang === 'ru' ? 'ПОБЕДА' : 'GANASTE';
+    ws.textContent = currentLang === 'en' ? 'You connected more dots' : currentLang === 'ru' ? 'Вы закрыли больше квадратов' : 'Cerraste más cuadros';
+  } else if (scores.bot > scores.player) {
+    wt.style.color = BOT_COLOR;
+    wt.textContent = currentLang === 'en' ? 'CPU WINS' : currentLang === 'ru' ? 'CPU ПОБЕДИЛ' : 'GANÓ LA CPU';
+    ws.textContent = currentLang === 'en' ? 'Try again!' : currentLang === 'ru' ? 'Попробуй снова!' : '¡Inténtalo de nuevo!';
+  } else {
+    wt.style.color = '#FFFFFF';
+    wt.textContent = currentLang === 'en' ? 'DRAW' : currentLang === 'ru' ? 'НИЧЬЯ' : 'EMPATE';
+    ws.textContent = currentLang === 'en' ? 'Equal dots closed' : currentLang === 'ru' ? 'Одинаково квадратов' : 'Mismo número de cuadros';
   }
+  wd.textContent = `${m}:${s}`;
+  wo.classList.add('open');
 
-  // Consensus glow
-  const cAlpha = 0.15 + collapseT*0.5;
-  const gr=ctx.createRadialGradient(CONSENSUS_X,CONSENSUS_Y,0,CONSENSUS_X,CONSENSUS_Y,100);
-  gr.addColorStop(0,`rgba(255,255,180,${cAlpha})`);
-  gr.addColorStop(1,'rgba(0,0,0,0)');
-  ctx.fillStyle=gr;
-  ctx.beginPath(); ctx.arc(CONSENSUS_X,CONSENSUS_Y,100,0,Math.PI*2); ctx.fill();
-
-  if (collapseT>0.3) {
-    ctx.font=`${Math.floor(10*collapseT)}px Space Mono`;
-    ctx.textAlign='center'; ctx.fillStyle=`rgba(255,255,180,${0.4*collapseT})`;
-    ctx.fillText('consensus',CONSENSUS_X,CONSENSUS_Y+4);
-    ctx.font=`${Math.floor(8*collapseT)}px Space Mono`;
-    ctx.fillStyle=`rgba(255,255,180,${0.2*collapseT})`;
-    ctx.fillText('(click again to escape)',CONSENSUS_X,CONSENSUS_Y+18);
+  // Save record
+  if (playerName) {
+    const records = JSON.parse(localStorage.getItem('dt_records') || '[]');
+    records.push({ name: playerName, score: scores.player, time: elapsed, date: new Date().toISOString() });
+    localStorage.setItem('dt_records', JSON.stringify(records));
   }
 }
 
-function drawNoiseParticles(t) {
-  for (const p of NOISE) {
-    p.x+=p.vx; p.y+=p.vy;
-    if(p.x<-80)p.x=W+40; if(p.x>W+80)p.x=-40;
-    if(p.y<-30)p.y=H+15; if(p.y>H+30)p.y=-15;
-    const dx=p.x-smx,dy=p.y-smy,dc=Math.sqrt(dx*dx+dy*dy);
-    const waveA = p.baseAlpha*(1-collapseT*0.8);
-    if(dc<BLIND_R) p.alpha=0;
-    else if(dc<REVEAL_R) { const rt=1-(dc-BLIND_R)/(REVEAL_R-BLIND_R); p.alpha=waveA+rt*0.25; }
-    else p.alpha=Math.max(0,p.alpha-0.02);
-    if(p.alpha<0.005) continue;
-    ctx.save(); ctx.globalAlpha=p.alpha;
-    ctx.font=`${Math.floor(p.size)}px Space Mono`;
-    ctx.textAlign='left'; ctx.fillStyle='rgba(150,180,255,1)';
-    ctx.fillText(p.word,p.x,p.y);
-    ctx.restore();
-  }
+function resize() {
+  const wrapper = document.getElementById('gameWrapper');
+  const W = wrapper.clientWidth;
+  const H = wrapper.clientHeight;
+  canvas.width  = W;
+  canvas.height = H;
+  const minDim = Math.min(W, H);
+  cellSize = Math.floor((minDim * 0.80) / (GRID - 1));
+  dotR = Math.max(2, Math.floor(cellSize * 0.04));
+  offsetX = Math.floor((W - cellSize * (GRID - 1)) / 2);
+  offsetY = Math.floor((H - cellSize * (GRID - 1)) / 2);
+  if (gameActive || hLines) drawBoard();
 }
 
-function drawProducts(t) {
-  for (let i=0;i<PRODUCT_PARTICLES.length;i++) {
-    const p=PRODUCT_PARTICLES[i];
-    // Orbitar lentamente
-    p.angle += p.orbitSpeed;
-    // Colapso: converge al consensus
-    const targetX = collapsed
-      ? collapseX + (Math.random()-0.5)*30
-      : W/2 + Math.cos(p.angle)*p.orbitR;
-    const targetY = collapsed
-      ? collapseY + (Math.random()-0.5)*30
-      : H/2 + Math.sin(p.angle)*p.orbitR;
+function dotPos(r, c) {
+  return { x: offsetX + c * cellSize, y: offsetY + r * cellSize };
+}
 
-    p.x += (targetX-p.x)*0.03;
-    p.y += (targetY-p.y)*0.03;
+function drawBoard() {
+  if (!ctx) return;
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    const dx=p.x-smx, dy=p.y-smy, dc=Math.sqrt(dx*dx+dy*dy);
+  // Background grid atmosphere
+  ctx.fillStyle = 'rgba(20,20,20,0.0)';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // Alpha: visible en zona reveal, casi invisible otherwise, desaparece en colapso
-    let targetAlpha=0;
-    if (!collapsed) {
-      if(dc>BLIND_R && dc<REVEAL_R) {
-        const rt=1-(dc-BLIND_R)/(REVEAL_R-BLIND_R);
-        targetAlpha=rt*0.95;
-        p.revealed=true;
-      } else if(p.revealed && dc>=REVEAL_R) {
-        targetAlpha=0.06;
+  // Draw completed boxes
+  for (let r = 0; r < GRID - 1; r++) {
+    for (let c = 0; c < GRID - 1; c++) {
+      if (boxes[r][c]) {
+        const p1 = dotPos(r, c);
+        ctx.fillStyle = boxes[r][c] === 1
+          ? 'rgba(232,71,10,0.18)'
+          : 'rgba(85,153,255,0.15)';
+        ctx.fillRect(p1.x, p1.y, cellSize, cellSize);
+
+        // Initials
+        const center = { x: p1.x + cellSize / 2, y: p1.y + cellSize / 2 };
+        ctx.fillStyle = boxes[r][c] === 1 ? PLAYER_COLOR : BOT_COLOR;
+        ctx.font = `bold ${Math.floor(cellSize * 0.28)}px Helvetica Neue`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.globalAlpha = 0.6;
+        const label = boxes[r][c] === 1 ? (playerName ? playerName[0].toUpperCase() : 'T') : '⊕';
+        ctx.fillText(label, center.x, center.y);
+        ctx.globalAlpha = 1;
       }
-    } else {
-      targetAlpha=0.04*(1-collapseT);
     }
-    p.alpha+=(targetAlpha-p.alpha)*0.08;
-    if(p.alpha<0.01) continue;
+  }
 
-    ctx.save(); ctx.globalAlpha=p.alpha;
+  // Draw lines
+  // Horizontal
+  for (let r = 0; r < GRID; r++) {
+    for (let c = 0; c < GRID - 1; c++) {
+      const p1 = dotPos(r, c);
+      const p2 = dotPos(r, c + 1);
+      const owner = hLines[r][c];
+      const isHover = hoverLine && hoverLine.type === 'h' && hoverLine.r === r && hoverLine.c === c && !owner;
+      drawLine(p1, p2, owner, isHover);
+    }
+  }
+  // Vertical
+  for (let r = 0; r < GRID - 1; r++) {
+    for (let c = 0; c < GRID; c++) {
+      const p1 = dotPos(r, c);
+      const p2 = dotPos(r + 1, c);
+      const owner = vLines[r][c];
+      const isHover = hoverLine && hoverLine.type === 'v' && hoverLine.r === r && hoverLine.c === c && !owner;
+      drawLine(p1, p2, owner, isHover);
+    }
+  }
 
-    // Punto
-    const pulse=4+2*Math.sin(t*1.5+i);
-    const gr=ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,pulse*4);
-    gr.addColorStop(0,p.color); gr.addColorStop(1,'transparent');
-    ctx.fillStyle=gr; ctx.beginPath(); ctx.arc(p.x,p.y,pulse*4,0,Math.PI*2); ctx.fill();
-    ctx.fillStyle=p.color; ctx.beginPath(); ctx.arc(p.x,p.y,pulse,0,Math.PI*2); ctx.fill();
-
-    // Texto
-    ctx.shadowColor=p.color; ctx.shadowBlur=14;
-    ctx.font='bold 12px Space Mono'; ctx.textAlign='left';
-    ctx.fillStyle=p.color; ctx.fillText(p.text,p.x+12,p.y+3);
-    ctx.shadowBlur=0;
-    ctx.font='8px Space Mono'; ctx.fillStyle=`rgba(255,255,255,${p.alpha*0.6})`;
-    ctx.fillText(p.sub,p.x+12,p.y+15);
-
-    ctx.restore();
+  // Draw dots
+  for (let r = 0; r < GRID; r++) {
+    for (let c = 0; c < GRID; c++) {
+      const p = dotPos(r, c);
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, dotR, 0, Math.PI * 2);
+      ctx.fillStyle = '#CCCCCC';
+      ctx.fill();
+      // Orange glow on corner dots
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, dotR * 0.5, 0, Math.PI * 2);
+      ctx.fillStyle = '#FFFFFF';
+      ctx.fill();
+    }
   }
 }
 
-function drawBlindSpotRing() {
-  // Zona reveal: glow tenue
-  const gr=ctx.createRadialGradient(smx,smy,BLIND_R,smx,smy,REVEAL_R);
-  gr.addColorStop(0,'rgba(255,255,255,0.03)');
-  gr.addColorStop(1,'rgba(0,0,0,0)');
-  ctx.fillStyle=gr; ctx.beginPath(); ctx.arc(smx,smy,REVEAL_R,0,Math.PI*2); ctx.fill();
-
-  // Borde del blind spot (punteado)
-  ctx.beginPath(); ctx.arc(smx,smy,BLIND_R,0,Math.PI*2);
-  ctx.strokeStyle='rgba(255,255,255,0.07)';
-  ctx.lineWidth=1; ctx.setLineDash([3,9]); ctx.stroke(); ctx.setLineDash([]);
-
-  // Cruz
-  const cs=5;
-  ctx.strokeStyle='rgba(255,255,255,0.45)'; ctx.lineWidth=1;
+function drawLine(p1, p2, owner, isHover) {
   ctx.beginPath();
-  ctx.moveTo(smx-cs,smy); ctx.lineTo(smx+cs,smy);
-  ctx.moveTo(smx,smy-cs); ctx.lineTo(smx,smy+cs);
+  ctx.moveTo(p1.x, p1.y);
+  ctx.lineTo(p2.x, p2.y);
+  if (owner === 1) {
+    ctx.strokeStyle = PLAYER_COLOR;
+    ctx.lineWidth = 3;
+    ctx.globalAlpha = 0.9;
+  } else if (owner === 2) {
+    ctx.strokeStyle = BOT_COLOR;
+    ctx.lineWidth = 3;
+    ctx.globalAlpha = 0.9;
+  } else if (isHover) {
+    ctx.strokeStyle = PLAYER_COLOR;
+    ctx.lineWidth = 2;
+    ctx.globalAlpha = 0.5;
+  } else {
+    ctx.strokeStyle = '#2A2A2A';
+    ctx.lineWidth = 1;
+    ctx.globalAlpha = 0.8;
+  }
   ctx.stroke();
+  ctx.globalAlpha = 1;
+  ctx.lineWidth = 1;
 }
 
-function updateHint() {
-  const nc = document.getElementById('ncount');
-  if (!nc) return;
-  const rev = PRODUCT_PARTICLES.filter(p=>p.revealed).length;
-  nc.textContent = rev > 0 ? `${rev} / ${PRODUCT_PARTICLES.length} discovered` : '';
+function getNearestLine(mx, my) {
+  const threshold = cellSize * 0.35;
+  let best = null, bestDist = Infinity;
+
+  // Horizontal
+  for (let r = 0; r < GRID; r++) {
+    for (let c = 0; c < GRID - 1; c++) {
+      const p1 = dotPos(r, c);
+      const p2 = dotPos(r, c + 1);
+      const dist = distToSegment(mx, my, p1.x, p1.y, p2.x, p2.y);
+      if (dist < threshold && dist < bestDist) {
+        bestDist = dist;
+        best = { type: 'h', r, c };
+      }
+    }
+  }
+  // Vertical
+  for (let r = 0; r < GRID - 1; r++) {
+    for (let c = 0; c < GRID; c++) {
+      const p1 = dotPos(r, c);
+      const p2 = dotPos(r + 1, c);
+      const dist = distToSegment(mx, my, p1.x, p1.y, p2.x, p2.y);
+      if (dist < threshold && dist < bestDist) {
+        bestDist = dist;
+        best = { type: 'v', r, c };
+      }
+    }
+  }
+  return best;
 }
 
-let t=0;
-function loop() {
-  // Esperar primer movimiento del usuario — pantalla negra estática hasta entonces
-  if (!hasStarted) {
-    ctx.fillStyle='#000'; ctx.fillRect(0,0,W,H);
-    requestAnimationFrame(loop);
+function distToSegment(px, py, ax, ay, bx, by) {
+  const dx = bx - ax, dy = by - ay;
+  const t = Math.max(0, Math.min(1, ((px - ax) * dx + (py - ay) * dy) / (dx * dx + dy * dy)));
+  return Math.hypot(px - ax - t * dx, py - ay - t * dy);
+}
+
+function claimLine(type, r, c, who) {
+  if (type === 'h') {
+    if (hLines[r][c]) return false;
+    hLines[r][c] = who;
+  } else {
+    if (vLines[r][c]) return false;
+    vLines[r][c] = who;
+  }
+  return true;
+}
+
+function checkBoxes(who) {
+  let closed = 0;
+  for (let r = 0; r < GRID - 1; r++) {
+    for (let c = 0; c < GRID - 1; c++) {
+      if (!boxes[r][c]) {
+        // top, bottom, left, right
+        if (hLines[r][c] && hLines[r + 1][c] && vLines[r][c] && vLines[r][c + 1]) {
+          boxes[r][c] = who;
+          closed++;
+        }
+      }
+    }
+  }
+  return closed;
+}
+
+function showEmailGate() {
+  if (gateShown) return;
+  gateShown = true;
+  clearTimeout(freeTimer);
+  // Pause game
+  gameActive = false;
+  clearInterval(timerInterval);
+  // Show modal in "gate" mode
+  document.getElementById('modalEyebrow').textContent = currentLang === 'en' ? 'Keep playing' : currentLang === 'ru' ? 'Продолжить' : 'Sigue jugando';
+  document.getElementById('modalTitle').textContent   = currentLang === 'en' ? 'Connect your email' : currentLang === 'ru' ? 'Введи email' : 'Conecta tu correo';
+  document.getElementById('modalSubtext').textContent = currentLang === 'en' ? 'Enter your email to keep playing and save your score. Free forever.' : currentLang === 'ru' ? 'Введи email, чтобы продолжить и сохранить результат. Бесплатно.' : 'Ingresa tu correo para seguir jugando y guardar tu puntaje. Gratis.';
+  document.getElementById('startGameBtn').textContent = currentLang === 'en' ? 'Continue →' : currentLang === 'ru' ? 'Продолжить →' : 'Continuar →';
+  document.getElementById('skipModal').textContent    = currentLang === 'en' ? 'No thanks' : currentLang === 'ru' ? 'Нет, спасибо' : 'No gracias';
+  document.getElementById('emailModal').classList.add('open');
+}
+
+function playerMove(type, r, c) {
+  if (!gameActive || currentTurn !== 'player') return;
+  if (!claimLine(type, r, c, 1)) return;
+  freeLines++;
+  // Check line-count gate (only if no email yet)
+  if (!gateShown && !getCookie('dt_email') && freeLines >= FREE_LINES) {
+    checkBoxes(1); // still register the line visually
+    updateHUD();
+    drawBoard();
+    showEmailGate();
     return;
   }
+  const closed = checkBoxes(1);
+  scores.player += closed;
+  updateHUD();
+  drawBoard();
 
-  t+=0.014;
-  smx+=(mx-smx)*0.07; smy+=(my-smy)*0.07;
-  collapseT+= ((collapsed?1:0)-collapseT)*0.045;
+  if (isGameOver()) { endGame(); return; }
 
-  ctx.fillStyle='rgba(0,0,0,0.20)'; ctx.fillRect(0,0,W,H);
-
-  drawGrid(t);
-  drawWaves(t);
-  drawMainstreamArrows(t);
-  drawNoiseParticles(t);
-  drawProducts(t);
-  drawBlindSpotRing();
-  updateHint();
-
-  requestAnimationFrame(loop);
+  if (closed > 0) {
+    // player gets another turn
+  } else {
+    currentTurn = 'bot';
+    setTimeout(botMove, BOT_DELAY);
+  }
 }
 
-ctx.fillStyle='#000'; ctx.fillRect(0,0,W,H);
-loop();
-window.addEventListener('resize',()=>location.reload());
+function botMove() {
+  if (!gameActive) return;
+
+  const move = getBotMove();
+  if (!move) { endGame(); return; }
+
+  claimLine(move.type, move.r, move.c, 2);
+  const closed = checkBoxes(2);
+  scores.bot += closed;
+  updateHUD();
+  drawBoard();
+
+  if (isGameOver()) { endGame(); return; }
+
+  if (closed > 0) {
+    setTimeout(botMove, BOT_DELAY);
+  } else {
+    currentTurn = 'player';
+  }
+}
+
+function getBotMove() {
+  // Strategy: 1) close a box if possible, 2) avoid giving boxes, 3) random safe
+  const available = getAvailableLines();
+  if (!available.length) return null;
+
+  // 1. Close a box
+  for (const m of available) {
+    claimLine(m.type, m.r, m.c, 2);
+    const closed = countNewBoxes();
+    unclaimLine(m.type, m.r, m.c);
+    if (closed > 0) return m;
+  }
+
+  // 2. Avoid giving 3-sided boxes; pick lines that don't give opponent a box
+  const safe = available.filter(m => {
+    claimLine(m.type, m.r, m.c, 2);
+    const risk = wouldGiveBox();
+    unclaimLine(m.type, m.r, m.c);
+    return !risk;
+  });
+
+  if (safe.length) return safe[Math.floor(Math.random() * safe.length)];
+
+  // 3. Fallback random
+  return available[Math.floor(Math.random() * available.length)];
+}
+
+function getAvailableLines() {
+  const list = [];
+  for (let r = 0; r < GRID; r++) for (let c = 0; c < GRID - 1; c++) if (!hLines[r][c]) list.push({ type: 'h', r, c });
+  for (let r = 0; r < GRID - 1; r++) for (let c = 0; c < GRID; c++) if (!vLines[r][c]) list.push({ type: 'v', r, c });
+  return list;
+}
+
+function countNewBoxes() {
+  let n = 0;
+  for (let r = 0; r < GRID - 1; r++)
+    for (let c = 0; c < GRID - 1; c++)
+      if (!boxes[r][c] && hLines[r][c] && hLines[r+1][c] && vLines[r][c] && vLines[r][c+1]) n++;
+  return n;
+}
+
+function wouldGiveBox() {
+  // Check if any box has exactly 3 sides (making it easy for player)
+  for (let r = 0; r < GRID - 1; r++) {
+    for (let c = 0; c < GRID - 1; c++) {
+      if (!boxes[r][c]) {
+        const sides = (hLines[r][c] ? 1 : 0) + (hLines[r+1][c] ? 1 : 0)
+                    + (vLines[r][c] ? 1 : 0) + (vLines[r][c+1] ? 1 : 0);
+        if (sides === 3) return true;
+      }
+    }
+  }
+  return false;
+}
+
+function unclaimLine(type, r, c) {
+  if (type === 'h') hLines[r][c] = 0;
+  else vLines[r][c] = 0;
+}
+
+function isGameOver() {
+  for (let r = 0; r < GRID - 1; r++)
+    for (let c = 0; c < GRID - 1; c++)
+      if (!boxes[r][c]) return false;
+  return true;
+}
+
+/* ═══════════════════════════════════════════
+   INIT & EVENTS
+═══════════════════════════════════════════ */
+window.addEventListener('DOMContentLoaded', () => {
+  canvas = document.getElementById('timbiricheCanvas');
+  ctx    = canvas.getContext('2d');
+
+  resize();
+  window.addEventListener('resize', resize);
+
+  // Check cookie for returning player
+  const savedEmail = getCookie('dt_email');
+  const savedName  = getCookie('dt_name');
+
+  // Draw static board immediately
+  hLines = Array.from({ length: GRID }, () => new Array(GRID - 1).fill(0));
+  vLines = Array.from({ length: GRID - 1 }, () => new Array(GRID).fill(0));
+  boxes  = Array.from({ length: GRID - 1 }, () => new Array(GRID - 1).fill(0));
+  drawBoard();
+
+  if (savedEmail) {
+    // Returning user — start game directly, skip all gates
+    gateShown = true;
+    playerName = savedName || savedEmail.split('@')[0];
+    document.getElementById('gameScore').classList.add('active');
+    document.getElementById('winOverlay').classList.remove('open');
+    initGame();
+  } else {
+    // New user — start game immediately, gate will trigger after FREE_LINES or FREE_SECS
+    playerName = 'TÚ';
+    document.getElementById('gameScore').classList.add('active');
+    initGame();
+  }
+
+  function resolveModal(email) {
+    const wasGate = gateShown; // true = paused mid-game
+    if (email) {
+      setCookie('dt_email', email, 365);
+      const name = email.split('@')[0];
+      setCookie('dt_name', name, 365);
+      playerName = name;
+    }
+    document.getElementById('emailModal').classList.remove('open');
+    document.getElementById('gameScore').classList.add('active');
+
+    if (wasGate) {
+      // Resume paused game
+      gameActive = true;
+      startTimer();
+    } else {
+      initGame();
+    }
+  }
+
+  // Modal start / continue
+  document.getElementById('startGameBtn').addEventListener('click', () => {
+    const email = document.getElementById('playerEmail').value.trim();
+    resolveModal(email);
+  });
+
+  document.getElementById('skipModal').addEventListener('click', () => {
+    resolveModal('');
+  });
+
+  document.getElementById('playerEmail').addEventListener('keydown', e => {
+    if (e.key === 'Enter') document.getElementById('startGameBtn').click();
+  });
+
+  // Restart
+  document.getElementById('restartBtn').addEventListener('click', () => {
+    document.getElementById('winOverlay').classList.remove('open');
+    initGame();
+  });
+
+  // Canvas mouse interaction
+  canvas.addEventListener('mousemove', e => {
+    if (!gameActive || currentTurn !== 'player') return;
+    const rect = canvas.getBoundingClientRect();
+    const mx = e.clientX - rect.left;
+    const my = e.clientY - rect.top;
+    hoverLine = getNearestLine(mx, my);
+    drawBoard();
+  });
+
+  canvas.addEventListener('mouseleave', () => {
+    hoverLine = null;
+    if (gameActive) drawBoard();
+  });
+
+  canvas.addEventListener('click', e => {
+    if (!gameActive || currentTurn !== 'player') return;
+    const rect = canvas.getBoundingClientRect();
+    const mx = e.clientX - rect.left;
+    const my = e.clientY - rect.top;
+    const line = getNearestLine(mx, my);
+    if (line) playerMove(line.type, line.r, line.c);
+  });
+
+  // Touch support
+  canvas.addEventListener('touchend', e => {
+    e.preventDefault();
+    if (!gameActive || currentTurn !== 'player') return;
+    const rect = canvas.getBoundingClientRect();
+    const touch = e.changedTouches[0];
+    const mx = touch.clientX - rect.left;
+    const my = touch.clientY - rect.top;
+    const line = getNearestLine(mx, my);
+    if (line) playerMove(line.type, line.r, line.c);
+  });
+
+  // Nav scroll
+  window.addEventListener('scroll', () => {
+    document.getElementById('mainNav').classList.toggle('scrolled', window.scrollY > 20);
+  });
+
+  // Reveal on scroll
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.15 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  // Tagline reveal
+  setTimeout(() => {
+    document.getElementById('heroTagline').classList.add('visible');
+  }, 900);
+
+  // Chat
+  setupChat();
+});
+
+/* ═══════════════════════════════════════════
+   COOKIE HELPERS
+═══════════════════════════════════════════ */
+function setCookie(name, val, days) {
+  const d = new Date();
+  d.setTime(d.getTime() + days * 86400000);
+  document.cookie = `${name}=${encodeURIComponent(val)};expires=${d.toUTCString()};path=/`;
+}
+function getCookie(name) {
+  const c = document.cookie.split(';').map(s => s.trim());
+  for (const s of c) {
+    if (s.startsWith(name + '=')) return decodeURIComponent(s.slice(name.length + 1));
+  }
+  return '';
+}
+
+/* ═══════════════════════════════════════════
+   I18N
+═══════════════════════════════════════════ */
+let currentLang = 'es';
+
+function setLang(lang) {
+  currentLang = lang;
+  document.querySelectorAll('[data-' + lang + ']').forEach(el => {
+    const val = el.getAttribute('data-' + lang);
+    if (el.tagName === 'INPUT') el.placeholder = val;
+    else el.textContent = val;
+  });
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('lang' + lang.charAt(0).toUpperCase() + lang.slice(1)).classList.add('active');
+}
+
+/* ═══════════════════════════════════════════
+   CHAT
+═══════════════════════════════════════════ */
+const chatResponses = {
+  es: [
+    "Podemos automatizar eso en menos de 2 semanas. ¿Quieres que agendemos una llamada?",
+    "Ese proceso es candidato perfecto para N8N + Claude. ROI típico: 3x en 60 días.",
+    "Hemos resuelto eso para empresas similares. El costo depende del volumen, pero arrancamos desde $800 USD.",
+    "Interesante caso de uso. Déjame decirte: eso sí se puede automatizar completamente.",
+    "La mayoría de nuestros clientes recuperan la inversión en menos de 90 días."
+  ],
+  en: [
+    "We can automate that in less than 2 weeks. Want to schedule a call?",
+    "That process is a perfect candidate for N8N + Claude. Typical ROI: 3x in 60 days.",
+    "We've solved this for similar companies. Cost depends on volume, but we start from $800 USD.",
+    "Interesting use case. Let me tell you: that can be fully automated.",
+    "Most of our clients recover their investment in less than 90 days."
+  ],
+  ru: [
+    "Мы можем автоматизировать это менее чем за 2 недели. Запланируем звонок?",
+    "Этот процесс идеально подходит для N8N + Claude. Типичный ROI: 3x за 60 дней.",
+    "Мы решали это для похожих компаний. Стоимость зависит от объёма, от $800 USD.",
+    "Интересный кейс. Это можно полностью автоматизировать.",
+    "Большинство клиентов окупают вложения менее чем за 90 дней."
+  ]
+};
+
+function setupChat() {
+  const send = document.getElementById('chatSend');
+  const input = document.getElementById('chatInput');
+  const msgs = document.getElementById('chatMessages');
+
+  function sendMessage() {
+    const text = input.value.trim();
+    if (!text) return;
+    const userMsg = document.createElement('div');
+    userMsg.className = 'msg user';
+    userMsg.textContent = text;
+    msgs.appendChild(userMsg);
+    input.value = '';
+    msgs.scrollTop = msgs.scrollHeight;
+
+    const typing = document.createElement('div');
+    typing.className = 'msg bot typing-dots';
+    typing.innerHTML = '<span></span><span></span><span></span>';
+    msgs.appendChild(typing);
+    msgs.scrollTop = msgs.scrollHeight;
+
+    setTimeout(() => {
+      typing.remove();
+      const botMsg = document.createElement('div');
+      botMsg.className = 'msg bot';
+      const pool = chatResponses[currentLang] || chatResponses.es;
+      botMsg.textContent = pool[Math.floor(Math.random() * pool.length)];
+      msgs.appendChild(botMsg);
+      msgs.scrollTop = msgs.scrollHeight;
+    }, 1200);
+  }
+
+  send.addEventListener('click', sendMessage);
+  input.addEventListener('keydown', e => { if (e.key === 'Enter') sendMessage(); });
+}
 </script>
 </body>
 </html>
