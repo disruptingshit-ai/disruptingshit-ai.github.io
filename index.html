@@ -748,6 +748,9 @@ function endGame() {
   }
 }
 
+// Separate X and Y cell sizes so grid always fills the full viewport
+let cellW = 1, cellH = 1;
+
 function resize() {
   const wrapper = document.getElementById('gameWrapper');
   const W = wrapper.clientWidth;
@@ -755,33 +758,31 @@ function resize() {
   canvas.width  = W;
   canvas.height = H;
 
-  // Responsive margins — generous so dots never overlap the hero text center
   const isMobile = W < 600;
-  const isTablet = W < 1024;
 
-  const marginX = isMobile ? W * 0.08  : isTablet ? W * 0.08  : W * 0.07;
-  const marginY = isMobile ? H * 0.18  : isTablet ? H * 0.16  : H * 0.13;
+  // Fixed pixel margins — just enough edge breathing room
+  const marginX = isMobile ? 20 : 40;
+  const marginY = isMobile ? 50 : 72;
 
-  // Available drawing area after margins
-  const availW = W - marginX * 2;
-  const availH = H - marginY * 2;
+  // X and Y stretch independently so dots reach edge to edge
+  cellW = (W - marginX * 2) / (GRID - 1);
+  cellH = (H - marginY * 2) / (GRID - 1);
 
-  // Cell size that fits entirely within the available area
-  const cellSizeX = availW / (GRID - 1);
-  const cellSizeY = availH / (GRID - 1);
-  cellSize = Math.floor(Math.min(cellSizeX, cellSizeY));
+  // cellSize used only for hit detection threshold
+  cellSize = Math.floor(Math.min(cellW, cellH));
+  dotR = Math.max(3, Math.round(Math.min(cellW, cellH) * 0.055));
 
-  dotR = Math.max(isMobile ? 3 : 4, Math.floor(cellSize * 0.055));
-
-  // Anchor grid to start at margin (not centered on full W/H)
-  offsetX = Math.floor(marginX + (availW - cellSize * (GRID - 1)) / 2);
-  offsetY = Math.floor(marginY + (availH - cellSize * (GRID - 1)) / 2);
+  offsetX = marginX;
+  offsetY = marginY;
 
   if (gameActive || hLines) drawBoard();
 }
 
 function dotPos(r, c) {
-  return { x: offsetX + c * cellSize, y: offsetY + r * cellSize };
+  return {
+    x: offsetX + c * cellW,
+    y: offsetY + r * cellH
+  };
 }
 
 function drawBoard() {
@@ -877,7 +878,7 @@ function drawLine(p1, p2, owner, isHover) {
 }
 
 function getNearestLine(mx, my) {
-  const threshold = cellSize * 0.35;
+  const threshold = Math.min(cellW, cellH) * 0.4;
   let best = null, bestDist = Infinity;
 
   // Horizontal
