@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DISRUPTTHINGS — Automatización e IA para PyMEs</title>
+<title>DISRUPTTHINGS — Automatización e IA</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&display=swap');
 
@@ -91,7 +91,7 @@
   /* ─── HERO ─── */
   #hero {
     position: relative; width: 100%; height: 100vh;
-    display: flex; align-items: center; justify-content: center; overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
     flex-direction: column;
   }
 
@@ -99,7 +99,7 @@
   #gameWrapper {
     position: absolute; inset: 0;
     display: flex; align-items: center; justify-content: center;
-    overflow: hidden;
+    overflow: visible;
   }
 
   #timbiricheCanvas {
@@ -163,7 +163,7 @@
 
   .hero-cta {
     display: inline-block; pointer-events: all;
-    background: none; border: 1px solid #555555; color: #CCCCCC;
+    background: none; border: 1px solid #444444; color: #888888;
     padding: 12px 32px; font-size: 9px; letter-spacing: 4px;
     text-transform: uppercase; text-decoration: none;
     transition: border-color 0.2s, color 0.2s, background 0.2s;
@@ -235,12 +235,14 @@
   }
   .modal-btn:hover { opacity: 0.85; }
   .modal-skip {
-    display: block; margin-top: 12px; font-size: 9px;
-    color: #555; cursor: pointer; letter-spacing: 2px;
-    text-transform: uppercase; text-decoration: underline;
-    transition: color 0.2s;
+    display: block; margin-top: 14px; font-size: 10px;
+    color: #888888; cursor: pointer; letter-spacing: 2px;
+    text-transform: uppercase; text-decoration: none;
+    transition: color 0.2s; font-weight: 500;
+    padding: 6px 0;
+    border-top: 1px solid #2A2A2A;
   }
-  .modal-skip:hover { color: #888; }
+  .modal-skip:hover { color: #CCCCCC; }
 
   /* WIN OVERLAY */
   #winOverlay {
@@ -648,9 +650,9 @@ const PLAYER_COLOR = '#E8470A';
 const BOT_COLOR    = '#5599FF';
 const BOT_DELAY    = 500; // ms
 
-// Free-play gate: ask email after FREE_LINES lines OR FREE_SECS seconds
-const FREE_LINES = 3;
-const FREE_SECS  = 20;
+// Free-play gate: DISABLED — email modal only on explicit CTA
+const FREE_LINES = Infinity;
+const FREE_SECS  = Infinity;
 
 let canvas, ctx;
 let cellSize, offsetX, offsetY, dotR;
@@ -688,11 +690,6 @@ function initGame() {
   updateHUD();
   drawBoard();
   startTimer();
-  // Time-based gate
-  if (!gateShown) {
-    clearTimeout(freeTimer);
-    freeTimer = setTimeout(() => { if (!gateShown) showEmailGate(); }, FREE_SECS * 1000);
-  }
 }
 
 function startTimer() {
@@ -757,11 +754,29 @@ function resize() {
   const H = wrapper.clientHeight;
   canvas.width  = W;
   canvas.height = H;
-  const minDim = Math.min(W, H);
-  cellSize = Math.floor((minDim * 0.80) / (GRID - 1));
-  dotR = Math.max(2, Math.floor(cellSize * 0.04));
-  offsetX = Math.floor((W - cellSize * (GRID - 1)) / 2);
-  offsetY = Math.floor((H - cellSize * (GRID - 1)) / 2);
+
+  // Responsive margins — generous so dots never overlap the hero text center
+  const isMobile = W < 600;
+  const isTablet = W < 1024;
+
+  const marginX = isMobile ? W * 0.08  : isTablet ? W * 0.08  : W * 0.07;
+  const marginY = isMobile ? H * 0.18  : isTablet ? H * 0.16  : H * 0.13;
+
+  // Available drawing area after margins
+  const availW = W - marginX * 2;
+  const availH = H - marginY * 2;
+
+  // Cell size that fits entirely within the available area
+  const cellSizeX = availW / (GRID - 1);
+  const cellSizeY = availH / (GRID - 1);
+  cellSize = Math.floor(Math.min(cellSizeX, cellSizeY));
+
+  dotR = Math.max(isMobile ? 3 : 4, Math.floor(cellSize * 0.055));
+
+  // Anchor grid to start at margin (not centered on full W/H)
+  offsetX = Math.floor(marginX + (availW - cellSize * (GRID - 1)) / 2);
+  offsetY = Math.floor(marginY + (availH - cellSize * (GRID - 1)) / 2);
+
   if (gameActive || hLines) drawBoard();
 }
 
@@ -829,12 +844,7 @@ function drawBoard() {
       const p = dotPos(r, c);
       ctx.beginPath();
       ctx.arc(p.x, p.y, dotR, 0, Math.PI * 2);
-      ctx.fillStyle = '#CCCCCC';
-      ctx.fill();
-      // Orange glow on corner dots
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, dotR * 0.5, 0, Math.PI * 2);
-      ctx.fillStyle = '#FFFFFF';
+      ctx.fillStyle = '#555555';
       ctx.fill();
     }
   }
