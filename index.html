@@ -58,7 +58,6 @@
   }
   .nav-links a:hover { color: var(--light); }
 
-  /* LANGUAGE BUTTONS — FIXED */
   .nav-right {
     display: flex; align-items: center; gap: 4px;
     background: var(--surface2);
@@ -95,7 +94,6 @@
     flex-direction: column;
   }
 
-  /* TIMBIRICHE GAME */
   #gameWrapper {
     position: absolute; inset: 0;
     display: flex; align-items: center; justify-content: center;
@@ -107,7 +105,6 @@
     display: block;
   }
 
-  /* hero overlay gradient so text remains readable */
   #heroGradient {
     position: absolute; inset: 0;
     background: radial-gradient(ellipse 60% 50% at 50% 50%, transparent 0%, rgba(13,13,13,0.55) 100%);
@@ -119,12 +116,16 @@
     padding: 0 20px;
   }
 
+  /* 1. INDUSTRIES EYEBROW — white text + orange dots */
   .hero-eyebrow {
-    font-size: 9px; letter-spacing: 5px; color: var(--orange);
+    font-size: 10px; letter-spacing: 3px; color: #FFFFFF;
     text-transform: uppercase; margin-bottom: 24px;
     opacity: 0; animation: fadeUp 1s 0.3s forwards;
-    font-weight: 500;
+    font-weight: 400;
+    display: flex; align-items: center; justify-content: center; gap: 0; flex-wrap: wrap;
   }
+  .eyebrow-item { color: #FFFFFF; white-space: nowrap; }
+  .eyebrow-dot { color: var(--orange); font-weight: 900; margin: 0 8px; line-height: 1; }
 
   .hero-logo {
     display: flex; align-items: baseline; justify-content: center;
@@ -146,33 +147,43 @@
     font-weight: 200; letter-spacing: -4px; color: #CCCCCC;
   }
 
+  /* 2. AI · AUTOMATION sub — orange AI, orange dot, bold white AUTOMATION */
   .hero-sub {
-    font-size: 9px; letter-spacing: 8px; color: #888888;
+    font-size: 9px; letter-spacing: 8px;
     text-transform: uppercase; margin-bottom: 48px;
     opacity: 0; animation: fadeUp 1s 0.7s forwards;
     font-weight: 500;
+    display: flex; align-items: center; justify-content: center; gap: 6px;
   }
+  .sub-ai { color: var(--orange); }
+  .sub-sep { color: var(--orange); font-weight: 900; }
+  .sub-auto { color: #FFFFFF; font-weight: 800; letter-spacing: 8px; }
 
+  /* 5. Tagline — larger, stronger text shadow so it reads over the board */
   .hero-tagline {
-    font-size: clamp(14px, 1.8vw, 17px); color: #CCCCCC; font-weight: 300;
-    max-width: 380px; margin: 0 auto 36px; line-height: 1.7;
+    font-size: clamp(18px, 2.2vw, 22px); color: #FFFFFF; font-weight: 600;
+    max-width: 420px; margin: 0 auto 36px; line-height: 1.5;
     opacity: 0; transition: opacity 0.8s;
-    text-shadow: 0 1px 8px rgba(0,0,0,0.8);
+    text-shadow: 0 2px 16px rgba(0,0,0,0.95), 0 0 32px rgba(0,0,0,0.9);
+    letter-spacing: -0.3px;
   }
   .hero-tagline.visible { opacity: 1; }
 
+  /* 4. CTA — more noticeable border, white text, no fill */
   .hero-cta {
     display: inline-block; pointer-events: all;
-    background: none; border: 1px solid #444444; color: #888888;
-    padding: 12px 32px; font-size: 9px; letter-spacing: 4px;
+    background: none;
+    border: 2px solid #FFFFFF;
+    color: #FFFFFF;
+    padding: 14px 40px; font-size: 10px; letter-spacing: 5px;
     text-transform: uppercase; text-decoration: none;
     transition: border-color 0.2s, color 0.2s, background 0.2s;
     opacity: 0; animation: fadeUp 1s 1s forwards;
-    font-weight: 500;
+    font-weight: 600;
   }
   .hero-cta:hover { border-color: var(--orange); color: var(--orange); background: var(--orange-dim); }
 
-  /* GAME SCORE OVERLAY */
+  /* GAME SCORE OVERLAY — 3. Timer removed */
   #gameScore {
     position: absolute; top: 80px; right: 20px; z-index: 3;
     background: rgba(13,13,13,0.85);
@@ -183,14 +194,36 @@
     color: #888;
     letter-spacing: 1px;
     text-align: right;
-    min-width: 160px;
+    min-width: 120px;
     display: none;
   }
   #gameScore.active { display: block; }
   #gameScore .score-line { margin-bottom: 3px; }
   #gameScore .score-you { color: var(--orange); font-weight: 500; }
   #gameScore .score-bot { color: #5599FF; font-weight: 500; }
-  #gameScore .score-timer { color: #FFFFFF; font-size: 11px; font-weight: 500; margin-top: 6px; border-top: 1px solid var(--dim); padding-top: 6px; }
+
+  /* EASTER EGG — logo enclosed notification */
+  #easterEgg {
+    display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    z-index: 5; text-align: center; pointer-events: none;
+    animation: eggPop 0.5s ease forwards;
+  }
+  #easterEgg.show { display: block; }
+  .egg-box {
+    background: rgba(13,13,13,0.95);
+    border: 2px solid var(--orange);
+    padding: 28px 36px;
+    max-width: 320px;
+  }
+  .egg-emoji { font-size: 32px; margin-bottom: 10px; display: block; }
+  .egg-title { font-size: 18px; font-weight: 900; color: var(--orange); letter-spacing: -1px; margin-bottom: 6px; }
+  .egg-sub { font-size: 11px; color: #CCCCCC; line-height: 1.8; font-weight: 300; }
+  .egg-code { font-family: 'DM Mono', monospace; font-size: 13px; color: var(--orange); font-weight: 500; margin-top: 10px; border: 1px solid var(--dim); padding: 6px 14px; display: inline-block; letter-spacing: 2px; }
+
+  @keyframes eggPop {
+    from { opacity: 0; transform: translate(-50%, -52%) scale(0.92); }
+    to   { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+  }
 
   /* EMAIL MODAL */
   #emailModal {
@@ -254,7 +287,6 @@
   #winOverlay.open { display: flex; }
   .win-title { font-size: clamp(28px, 5vw, 52px); font-weight: 900; letter-spacing: -2px; margin-bottom: 8px; }
   .win-sub { font-size: 11px; color: #888; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 24px; font-weight: 500; }
-  .win-time { font-family: 'DM Mono', monospace; font-size: 32px; color: var(--orange); margin-bottom: 24px; font-weight: 500; }
   .win-restart {
     background: none; border: 1px solid var(--dim); color: #888;
     padding: 10px 28px; font-size: 9px; letter-spacing: 4px;
@@ -419,6 +451,8 @@
     section { padding: 64px 0; }
     footer { padding: 20px 24px; }
     #gameScore { top: 68px; right: 10px; }
+    .hero-eyebrow { font-size: 8px; gap: 0; }
+    .eyebrow-dot { margin: 0 5px; }
   }
 </style>
 </head>
@@ -427,7 +461,7 @@
 <!-- EMAIL MODAL -->
 <div id="emailModal">
   <div class="modal-box">
-    <p class="modal-eyebrow" id="modalEyebrow" data-es="Connect the Dots" data-en="Connect the Dots" data-ru="Connect the Dots">Connect the Dots</p>
+    <p class="modal-eyebrow" id="modalEyebrow">Connect the Dots</p>
     <h2 class="modal-title" id="modalTitle" data-es="¿Listo para jugar?" data-en="Ready to play?" data-ru="Готов играть?">¿Listo para jugar?</h2>
     <p class="modal-sub" id="modalSubtext" data-es="Ingresa tu correo para guardar tu record. Jugarás Timbiriche — conecta puntos para cerrar cuadros antes de que se acabe el tiempo." data-en="Enter your email to save your record. Play Dots & Boxes — close squares before time runs out." data-ru="Введи email, чтобы сохранить рекорд. Игра в точки и квадраты.">Ingresa tu correo para guardar tu record. Jugarás Timbiriche — conecta puntos para cerrar cuadros antes de que se acabe el tiempo.</p>
     <input type="email" class="modal-input" id="playerEmail" placeholder="tu@correo.com" />
@@ -461,36 +495,60 @@
   </div>
   <div id="heroGradient"></div>
 
-  <!-- Game Score HUD -->
+  <!-- Game Score HUD — no timer -->
   <div id="gameScore">
     <div class="score-line"><span class="score-you" id="hudYou">TÚ: 0</span></div>
     <div class="score-line"><span class="score-bot" id="hudBot">CPU: 0</span></div>
-    <div class="score-timer" id="hudTimer">03:00</div>
   </div>
 
   <!-- Win overlay -->
   <div id="winOverlay">
     <div class="win-title" id="winTitle">GANASTE</div>
     <div class="win-sub" id="winSub">Conectaste los puntos</div>
-    <div class="win-time" id="winTimeDisplay">01:23</div>
     <button class="win-restart" id="restartBtn" data-es="Jugar de nuevo" data-en="Play again" data-ru="Играть снова">Jugar de nuevo</button>
   </div>
 
+  <!-- Easter egg overlay -->
+  <div id="easterEgg">
+    <div class="egg-box">
+      <span class="egg-emoji">🎯</span>
+      <div class="egg-title" id="eggTitle">¡ENCERRASTE EL LOGO!</div>
+      <div class="egg-sub" id="eggSub">Eso no es fácil. Tenemos un descuento especial para mentes así de estratégicas.</div>
+      <div class="egg-code" id="eggCode">DISRUPTO15</div>
+    </div>
+  </div>
+
   <div class="hero-content">
-    <p class="hero-eyebrow"
-      data-es="Automatización · Inteligencia Artificial · PyMEs"
-      data-en="Automation · Artificial Intelligence · SMBs"
-      data-ru="Автоматизация · Искусственный интеллект · МСБ">
-      Automatización · Inteligencia Artificial · PyMEs</p>
+    <!-- 1. Industries eyebrow: white text + orange dots -->
+    <p class="hero-eyebrow" id="heroEyebrow">
+      <span class="eyebrow-item" data-key="ind1">Manufactura</span>
+      <span class="eyebrow-dot">·</span>
+      <span class="eyebrow-item" data-key="ind2">Logística</span>
+      <span class="eyebrow-dot">·</span>
+      <span class="eyebrow-item" data-key="ind3">Finanzas</span>
+      <span class="eyebrow-dot">·</span>
+      <span class="eyebrow-item" data-key="ind4">Salud</span>
+      <span class="eyebrow-dot">·</span>
+      <span class="eyebrow-item" data-key="ind5">Legal</span>
+      <span class="eyebrow-dot">·</span>
+      <span class="eyebrow-item" data-key="ind6">E-commerce</span>
+    </p>
     <div class="hero-logo">
       <span class="hl-disrup">DISRUP</span><span class="hl-t">T</span><span class="hl-hings">HINGS</span>
     </div>
-    <p class="hero-sub">AI &nbsp;·&nbsp; AUTOMATION</p>
+    <!-- 2. AI orange · orange dot · AUTOMATION bold white -->
+    <p class="hero-sub">
+      <span class="sub-ai">AI</span>
+      <span class="sub-sep">·</span>
+      <span class="sub-auto">AUTOMATION</span>
+    </p>
+    <!-- 5. Tagline: bigger, bolder, stronger shadow -->
     <p class="hero-tagline" id="heroTagline"
       data-es="Construimos el equipo invisible de tu empresa."
       data-en="We build your company's invisible team."
       data-ru="Мы создаём невидимую команду вашей компании.">
       Construimos el equipo invisible de tu empresa.</p>
+    <!-- 4. CTA: white border 2px, no fill -->
     <a href="#services" class="hero-cta"
       data-es="Ver cómo →" data-en="See how →" data-ru="Узнать больше →">Ver cómo →</a>
   </div>
@@ -602,13 +660,13 @@
         <h2 class="section-title" data-es="Sin retainers forzados." data-en="No forced retainers." data-ru="Без навязанных контрактов.">Sin retainers forzados.</h2>
         <p class="pricing-note" data-es="Proyectos fijos o mensualidades. Entregamos en semanas, no meses. Cada automatización tiene ROI medible antes de firmar." data-en="Fixed projects or monthly. We deliver in weeks, not months. Every automation has measurable ROI before signing." data-ru="Фиксированные проекты или помесячно. Доставляем за недели, не месяцы.">Proyectos fijos o mensualidades. Entregamos en semanas, no meses. Cada automatización tiene ROI medible antes de firmar.</p>
         <div class="pricing-tags">
-          <span class="tag" data-es="N8N" data-en="N8N" data-ru="N8N">N8N</span>
-          <span class="tag" data-es="Make" data-en="Make" data-ru="Make">Make</span>
-          <span class="tag" data-es="Claude AI" data-en="Claude AI" data-ru="Claude AI">Claude AI</span>
-          <span class="tag" data-es="Zapier" data-en="Zapier" data-ru="Zapier">Zapier</span>
-          <span class="tag" data-es="WhatsApp API" data-en="WhatsApp API" data-ru="WhatsApp API">WhatsApp API</span>
-          <span class="tag" data-es="Stripe" data-en="Stripe" data-ru="Stripe">Stripe</span>
-          <span class="tag" data-es="Google Workspace" data-en="Google Workspace" data-ru="Google Workspace">Google Workspace</span>
+          <span class="tag">N8N</span>
+          <span class="tag">Make</span>
+          <span class="tag">Claude AI</span>
+          <span class="tag">Zapier</span>
+          <span class="tag">WhatsApp API</span>
+          <span class="tag">Stripe</span>
+          <span class="tag">Google Workspace</span>
         </div>
       </div>
     </div>
@@ -644,37 +702,65 @@
    TIMBIRICHE (DOTS & BOXES) ENGINE
 ═══════════════════════════════════════════ */
 
-const GRID = 9; // 9x9 dots = 8x8 boxes — denser field
-const GAME_TIME = 180; // 3 minutes
+const GRID = 9;
+const GAME_TIME = 180;
 const PLAYER_COLOR = '#E8470A';
 const BOT_COLOR    = '#5599FF';
-const BOT_DELAY    = 500; // ms
-
-// Free-play gate: DISABLED — email modal only on explicit CTA
-const FREE_LINES = Infinity;
-const FREE_SECS  = Infinity;
+const BOT_DELAY    = 500;
 
 let canvas, ctx;
 let cellSize, offsetX, offsetY, dotR;
 
-// State
-let hLines, vLines;       // horizontal & vertical line ownership: 0=none,1=player,2=bot
-let boxes;                // ownership of each box
+let hLines, vLines;
+let boxes;
 let scores = { player: 0, bot: 0 };
-let currentTurn = 'player'; // 'player' | 'bot'
+let currentTurn = 'player';
 let gameActive = false;
 let timerInterval = null;
 let timeLeft = GAME_TIME;
 let startTime = null;
 let playerName = '';
+let easterEggShown = false;
 
-// Free-play gate
-let freeLines = 0;
-let freeTimer = null;
-let gateShown = false;
+let hoverLine = null;
 
-// hover state
-let hoverLine = null; // {type:'h'|'v', r, c}
+/* ─── LOGO BOUNDING BOX (for easter egg detection) ─── */
+/* The logo sits roughly in the center of the canvas.
+   We detect if the hero-content area is "enclosed" by checking
+   that a ring of boxes around the center are all claimed. */
+function checkLogoEnclosed() {
+  if (easterEggShown) return;
+  // Center grid cell
+  const cx = Math.floor((GRID - 1) / 2); // 4
+  const cy = Math.floor((GRID - 1) / 2); // 4
+  // Check a 3x3 ring of boxes centered on (cy, cx)
+  const toCheck = [];
+  for (let r = cy - 2; r <= cy + 2; r++) {
+    for (let c = cx - 2; c <= cx + 2; c++) {
+      if (r >= 0 && r < GRID-1 && c >= 0 && c < GRID-1) {
+        // Only the outer ring
+        if (r === cy - 2 || r === cy + 2 || c === cx - 2 || c === cx + 2) {
+          toCheck.push({ r, c });
+        }
+      }
+    }
+  }
+  const allClaimed = toCheck.every(({ r, c }) => boxes[r][c] === 1);
+  if (allClaimed && toCheck.length >= 12) {
+    showEasterEgg();
+  }
+}
+
+function showEasterEgg() {
+  easterEggShown = true;
+  const egg = document.getElementById('easterEgg');
+  egg.classList.add('show');
+  setTimeout(() => {
+    egg.style.transition = 'opacity 1s';
+    egg.style.opacity = '0';
+    setTimeout(() => { egg.classList.remove('show'); egg.style.opacity = ''; }, 1000);
+  }, 5000);
+}
 
 function initGame() {
   hLines = Array.from({ length: GRID }, () => new Array(GRID - 1).fill(0));
@@ -684,7 +770,7 @@ function initGame() {
   timeLeft = GAME_TIME;
   currentTurn = 'player';
   hoverLine = null;
-  freeLines = 0;
+  easterEggShown = false;
   gameActive = true;
   startTime = Date.now();
   updateHUD();
@@ -696,7 +782,6 @@ function startTimer() {
   clearInterval(timerInterval);
   timerInterval = setInterval(() => {
     timeLeft--;
-    updateHUD();
     if (timeLeft <= 0) {
       clearInterval(timerInterval);
       endGame();
@@ -705,9 +790,6 @@ function startTimer() {
 }
 
 function updateHUD() {
-  const m = String(Math.floor(timeLeft / 60)).padStart(2, '0');
-  const s = String(timeLeft % 60).padStart(2, '0');
-  document.getElementById('hudTimer').textContent = `${m}:${s}`;
   document.getElementById('hudYou').textContent = `TÚ: ${scores.player}`;
   document.getElementById('hudBot').textContent = `CPU: ${scores.bot}`;
 }
@@ -715,14 +797,10 @@ function updateHUD() {
 function endGame() {
   gameActive = false;
   clearInterval(timerInterval);
-  const elapsed = Math.floor((Date.now() - startTime) / 1000);
-  const m = String(Math.floor(elapsed / 60)).padStart(2, '0');
-  const s = String(elapsed % 60).padStart(2, '0');
 
   const wo = document.getElementById('winOverlay');
   const wt = document.getElementById('winTitle');
   const ws = document.getElementById('winSub');
-  const wd = document.getElementById('winTimeDisplay');
 
   if (scores.player > scores.bot) {
     wt.style.color = PLAYER_COLOR;
@@ -737,18 +815,18 @@ function endGame() {
     wt.textContent = currentLang === 'en' ? 'DRAW' : currentLang === 'ru' ? 'НИЧЬЯ' : 'EMPATE';
     ws.textContent = currentLang === 'en' ? 'Equal dots closed' : currentLang === 'ru' ? 'Одинаково квадратов' : 'Mismo número de cuadros';
   }
-  wd.textContent = `${m}:${s}`;
   wo.classList.add('open');
 
-  // Save record
   if (playerName) {
-    const records = JSON.parse(localStorage.getItem('dt_records') || '[]');
-    records.push({ name: playerName, score: scores.player, time: elapsed, date: new Date().toISOString() });
-    localStorage.setItem('dt_records', JSON.stringify(records));
+    try {
+      const records = JSON.parse(localStorage.getItem('dt_records') || '[]');
+      const elapsed = Math.floor((Date.now() - startTime) / 1000);
+      records.push({ name: playerName, score: scores.player, time: elapsed, date: new Date().toISOString() });
+      localStorage.setItem('dt_records', JSON.stringify(records));
+    } catch(e) {}
   }
 }
 
-// Separate X and Y cell sizes so grid always fills the full viewport
 let cellW = 1, cellH = 1;
 
 function resize() {
@@ -759,19 +837,13 @@ function resize() {
   canvas.height = H;
 
   const isMobile = W < 600;
-
-  // Fixed pixel margins — just enough edge breathing room
   const marginX = isMobile ? 20 : 40;
   const marginY = isMobile ? 50 : 72;
 
-  // X and Y stretch independently so dots reach edge to edge
   cellW = (W - marginX * 2) / (GRID - 1);
   cellH = (H - marginY * 2) / (GRID - 1);
-
-  // cellSize used only for hit detection threshold
   cellSize = Math.floor(Math.min(cellW, cellH));
   dotR = Math.max(3, Math.round(Math.min(cellW, cellH) * 0.055));
-
   offsetX = marginX;
   offsetY = marginY;
 
@@ -779,34 +851,23 @@ function resize() {
 }
 
 function dotPos(r, c) {
-  return {
-    x: offsetX + c * cellW,
-    y: offsetY + r * cellH
-  };
+  return { x: offsetX + c * cellW, y: offsetY + r * cellH };
 }
 
 function drawBoard() {
   if (!ctx) return;
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  // Background grid atmosphere
-  ctx.fillStyle = 'rgba(20,20,20,0.0)';
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-  // Draw completed boxes
   for (let r = 0; r < GRID - 1; r++) {
     for (let c = 0; c < GRID - 1; c++) {
       if (boxes[r][c]) {
         const p1 = dotPos(r, c);
-        ctx.fillStyle = boxes[r][c] === 1
-          ? 'rgba(232,71,10,0.18)'
-          : 'rgba(85,153,255,0.15)';
-        ctx.fillRect(p1.x, p1.y, cellSize, cellSize);
+        ctx.fillStyle = boxes[r][c] === 1 ? 'rgba(232,71,10,0.18)' : 'rgba(85,153,255,0.15)';
+        ctx.fillRect(p1.x, p1.y, cellW, cellH);
 
-        // Initials
-        const center = { x: p1.x + cellSize / 2, y: p1.y + cellSize / 2 };
+        const center = { x: p1.x + cellW / 2, y: p1.y + cellH / 2 };
         ctx.fillStyle = boxes[r][c] === 1 ? PLAYER_COLOR : BOT_COLOR;
-        ctx.font = `bold ${Math.floor(cellSize * 0.28)}px Helvetica Neue`;
+        ctx.font = `bold ${Math.floor(Math.min(cellW, cellH) * 0.28)}px Helvetica Neue`;
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         ctx.globalAlpha = 0.6;
@@ -817,8 +878,6 @@ function drawBoard() {
     }
   }
 
-  // Draw lines
-  // Horizontal
   for (let r = 0; r < GRID; r++) {
     for (let c = 0; c < GRID - 1; c++) {
       const p1 = dotPos(r, c);
@@ -828,7 +887,6 @@ function drawBoard() {
       drawLine(p1, p2, owner, isHover);
     }
   }
-  // Vertical
   for (let r = 0; r < GRID - 1; r++) {
     for (let c = 0; c < GRID; c++) {
       const p1 = dotPos(r, c);
@@ -839,7 +897,6 @@ function drawBoard() {
     }
   }
 
-  // Draw dots
   for (let r = 0; r < GRID; r++) {
     for (let c = 0; c < GRID; c++) {
       const p = dotPos(r, c);
@@ -856,21 +913,13 @@ function drawLine(p1, p2, owner, isHover) {
   ctx.moveTo(p1.x, p1.y);
   ctx.lineTo(p2.x, p2.y);
   if (owner === 1) {
-    ctx.strokeStyle = PLAYER_COLOR;
-    ctx.lineWidth = 3;
-    ctx.globalAlpha = 0.9;
+    ctx.strokeStyle = PLAYER_COLOR; ctx.lineWidth = 3; ctx.globalAlpha = 0.9;
   } else if (owner === 2) {
-    ctx.strokeStyle = BOT_COLOR;
-    ctx.lineWidth = 3;
-    ctx.globalAlpha = 0.9;
+    ctx.strokeStyle = BOT_COLOR; ctx.lineWidth = 3; ctx.globalAlpha = 0.9;
   } else if (isHover) {
-    ctx.strokeStyle = PLAYER_COLOR;
-    ctx.lineWidth = 2;
-    ctx.globalAlpha = 0.5;
+    ctx.strokeStyle = PLAYER_COLOR; ctx.lineWidth = 2; ctx.globalAlpha = 0.5;
   } else {
-    ctx.strokeStyle = '#2A2A2A';
-    ctx.lineWidth = 1;
-    ctx.globalAlpha = 0.8;
+    ctx.strokeStyle = '#2A2A2A'; ctx.lineWidth = 1; ctx.globalAlpha = 0.8;
   }
   ctx.stroke();
   ctx.globalAlpha = 1;
@@ -881,28 +930,18 @@ function getNearestLine(mx, my) {
   const threshold = Math.min(cellW, cellH) * 0.4;
   let best = null, bestDist = Infinity;
 
-  // Horizontal
   for (let r = 0; r < GRID; r++) {
     for (let c = 0; c < GRID - 1; c++) {
-      const p1 = dotPos(r, c);
-      const p2 = dotPos(r, c + 1);
+      const p1 = dotPos(r, c), p2 = dotPos(r, c + 1);
       const dist = distToSegment(mx, my, p1.x, p1.y, p2.x, p2.y);
-      if (dist < threshold && dist < bestDist) {
-        bestDist = dist;
-        best = { type: 'h', r, c };
-      }
+      if (dist < threshold && dist < bestDist) { bestDist = dist; best = { type: 'h', r, c }; }
     }
   }
-  // Vertical
   for (let r = 0; r < GRID - 1; r++) {
     for (let c = 0; c < GRID; c++) {
-      const p1 = dotPos(r, c);
-      const p2 = dotPos(r + 1, c);
+      const p1 = dotPos(r, c), p2 = dotPos(r + 1, c);
       const dist = distToSegment(mx, my, p1.x, p1.y, p2.x, p2.y);
-      if (dist < threshold && dist < bestDist) {
-        bestDist = dist;
-        best = { type: 'v', r, c };
-      }
+      if (dist < threshold && dist < bestDist) { bestDist = dist; best = { type: 'v', r, c }; }
     }
   }
   return best;
@@ -915,13 +954,8 @@ function distToSegment(px, py, ax, ay, bx, by) {
 }
 
 function claimLine(type, r, c, who) {
-  if (type === 'h') {
-    if (hLines[r][c]) return false;
-    hLines[r][c] = who;
-  } else {
-    if (vLines[r][c]) return false;
-    vLines[r][c] = who;
-  }
+  if (type === 'h') { if (hLines[r][c]) return false; hLines[r][c] = who; }
+  else { if (vLines[r][c]) return false; vLines[r][c] = who; }
   return true;
 }
 
@@ -929,88 +963,44 @@ function checkBoxes(who) {
   let closed = 0;
   for (let r = 0; r < GRID - 1; r++) {
     for (let c = 0; c < GRID - 1; c++) {
-      if (!boxes[r][c]) {
-        // top, bottom, left, right
-        if (hLines[r][c] && hLines[r + 1][c] && vLines[r][c] && vLines[r][c + 1]) {
-          boxes[r][c] = who;
-          closed++;
-        }
+      if (!boxes[r][c] && hLines[r][c] && hLines[r+1][c] && vLines[r][c] && vLines[r][c+1]) {
+        boxes[r][c] = who; closed++;
       }
     }
   }
   return closed;
 }
 
-function showEmailGate() {
-  if (gateShown) return;
-  gateShown = true;
-  clearTimeout(freeTimer);
-  // Pause game
-  gameActive = false;
-  clearInterval(timerInterval);
-  // Show modal in "gate" mode
-  document.getElementById('modalEyebrow').textContent = currentLang === 'en' ? 'Keep playing' : currentLang === 'ru' ? 'Продолжить' : 'Sigue jugando';
-  document.getElementById('modalTitle').textContent   = currentLang === 'en' ? 'Connect your email' : currentLang === 'ru' ? 'Введи email' : 'Conecta tu correo';
-  document.getElementById('modalSubtext').textContent = currentLang === 'en' ? 'Enter your email to keep playing and save your score. Free forever.' : currentLang === 'ru' ? 'Введи email, чтобы продолжить и сохранить результат. Бесплатно.' : 'Ingresa tu correo para seguir jugando y guardar tu puntaje. Gratis.';
-  document.getElementById('startGameBtn').textContent = currentLang === 'en' ? 'Continue →' : currentLang === 'ru' ? 'Продолжить →' : 'Continuar →';
-  document.getElementById('skipModal').textContent    = currentLang === 'en' ? 'No thanks' : currentLang === 'ru' ? 'Нет, спасибо' : 'No gracias';
-  document.getElementById('emailModal').classList.add('open');
-}
-
 function playerMove(type, r, c) {
   if (!gameActive || currentTurn !== 'player') return;
   if (!claimLine(type, r, c, 1)) return;
-  freeLines++;
-  // Check line-count gate (only if no email yet)
-  if (!gateShown && !getCookie('dt_email') && freeLines >= FREE_LINES) {
-    checkBoxes(1); // still register the line visually
-    updateHUD();
-    drawBoard();
-    showEmailGate();
-    return;
-  }
   const closed = checkBoxes(1);
   scores.player += closed;
   updateHUD();
   drawBoard();
-
+  if (closed > 0) checkLogoEnclosed();
   if (isGameOver()) { endGame(); return; }
-
-  if (closed > 0) {
-    // player gets another turn
-  } else {
-    currentTurn = 'bot';
-    setTimeout(botMove, BOT_DELAY);
-  }
+  if (closed === 0) { currentTurn = 'bot'; setTimeout(botMove, BOT_DELAY); }
 }
 
 function botMove() {
   if (!gameActive) return;
-
   const move = getBotMove();
   if (!move) { endGame(); return; }
-
   claimLine(move.type, move.r, move.c, 2);
   const closed = checkBoxes(2);
   scores.bot += closed;
   updateHUD();
   drawBoard();
-
   if (isGameOver()) { endGame(); return; }
-
-  if (closed > 0) {
-    setTimeout(botMove, BOT_DELAY);
-  } else {
-    currentTurn = 'player';
-  }
+  if (closed > 0) setTimeout(botMove, BOT_DELAY);
+  else currentTurn = 'player';
 }
 
 function getBotMove() {
-  // Strategy: 1) close a box if possible, 2) avoid giving boxes, 3) random safe
   const available = getAvailableLines();
   if (!available.length) return null;
 
-  // 1. Close a box
   for (const m of available) {
     claimLine(m.type, m.r, m.c, 2);
     const closed = countNewBoxes();
@@ -1018,7 +1008,6 @@ function getBotMove() {
     if (closed > 0) return m;
   }
 
-  // 2. Avoid giving 3-sided boxes; pick lines that don't give opponent a box
   const safe = available.filter(m => {
     claimLine(m.type, m.r, m.c, 2);
     const risk = wouldGiveBox();
@@ -1027,8 +1016,6 @@ function getBotMove() {
   });
 
   if (safe.length) return safe[Math.floor(Math.random() * safe.length)];
-
-  // 3. Fallback random
   return available[Math.floor(Math.random() * available.length)];
 }
 
@@ -1048,12 +1035,10 @@ function countNewBoxes() {
 }
 
 function wouldGiveBox() {
-  // Check if any box has exactly 3 sides (making it easy for player)
   for (let r = 0; r < GRID - 1; r++) {
     for (let c = 0; c < GRID - 1; c++) {
       if (!boxes[r][c]) {
-        const sides = (hLines[r][c] ? 1 : 0) + (hLines[r+1][c] ? 1 : 0)
-                    + (vLines[r][c] ? 1 : 0) + (vLines[r][c+1] ? 1 : 0);
+        const sides = (hLines[r][c]?1:0)+(hLines[r+1][c]?1:0)+(vLines[r][c]?1:0)+(vLines[r][c+1]?1:0);
         if (sides === 3) return true;
       }
     }
@@ -1062,8 +1047,7 @@ function wouldGiveBox() {
 }
 
 function unclaimLine(type, r, c) {
-  if (type === 'h') hLines[r][c] = 0;
-  else vLines[r][c] = 0;
+  if (type === 'h') hLines[r][c] = 0; else vLines[r][c] = 0;
 }
 
 function isGameOver() {
@@ -1083,123 +1067,93 @@ window.addEventListener('DOMContentLoaded', () => {
   resize();
   window.addEventListener('resize', resize);
 
-  // Check cookie for returning player
-  const savedEmail = getCookie('dt_email');
-  const savedName  = getCookie('dt_name');
+  let savedEmail = '';
+  let savedName = '';
+  try {
+    savedEmail = getCookie('dt_email');
+    savedName  = getCookie('dt_name');
+  } catch(e) {}
 
-  // Draw static board immediately
   hLines = Array.from({ length: GRID }, () => new Array(GRID - 1).fill(0));
   vLines = Array.from({ length: GRID - 1 }, () => new Array(GRID).fill(0));
   boxes  = Array.from({ length: GRID - 1 }, () => new Array(GRID - 1).fill(0));
   drawBoard();
 
   if (savedEmail) {
-    // Returning user — start game directly, skip all gates
-    gateShown = true;
     playerName = savedName || savedEmail.split('@')[0];
     document.getElementById('gameScore').classList.add('active');
     document.getElementById('winOverlay').classList.remove('open');
     initGame();
   } else {
-    // New user — start game immediately, gate will trigger after FREE_LINES or FREE_SECS
     playerName = 'TÚ';
     document.getElementById('gameScore').classList.add('active');
     initGame();
   }
 
   function resolveModal(email) {
-    const wasGate = gateShown; // true = paused mid-game
     if (email) {
-      setCookie('dt_email', email, 365);
-      const name = email.split('@')[0];
-      setCookie('dt_name', name, 365);
-      playerName = name;
+      try {
+        setCookie('dt_email', email, 365);
+        const name = email.split('@')[0];
+        setCookie('dt_name', name, 365);
+        playerName = name;
+      } catch(e) {}
     }
     document.getElementById('emailModal').classList.remove('open');
     document.getElementById('gameScore').classList.add('active');
-
-    if (wasGate) {
-      // Resume paused game
-      gameActive = true;
-      startTimer();
-    } else {
-      initGame();
-    }
+    gameActive = true;
+    startTimer();
   }
 
-  // Modal start / continue
   document.getElementById('startGameBtn').addEventListener('click', () => {
     const email = document.getElementById('playerEmail').value.trim();
     resolveModal(email);
   });
-
-  document.getElementById('skipModal').addEventListener('click', () => {
-    resolveModal('');
-  });
-
+  document.getElementById('skipModal').addEventListener('click', () => resolveModal(''));
   document.getElementById('playerEmail').addEventListener('keydown', e => {
     if (e.key === 'Enter') document.getElementById('startGameBtn').click();
   });
 
-  // Restart
   document.getElementById('restartBtn').addEventListener('click', () => {
     document.getElementById('winOverlay').classList.remove('open');
     initGame();
   });
 
-  // Canvas mouse interaction
   canvas.addEventListener('mousemove', e => {
     if (!gameActive || currentTurn !== 'player') return;
     const rect = canvas.getBoundingClientRect();
-    const mx = e.clientX - rect.left;
-    const my = e.clientY - rect.top;
-    hoverLine = getNearestLine(mx, my);
+    hoverLine = getNearestLine(e.clientX - rect.left, e.clientY - rect.top);
     drawBoard();
   });
-
-  canvas.addEventListener('mouseleave', () => {
-    hoverLine = null;
-    if (gameActive) drawBoard();
-  });
-
+  canvas.addEventListener('mouseleave', () => { hoverLine = null; if (gameActive) drawBoard(); });
   canvas.addEventListener('click', e => {
     if (!gameActive || currentTurn !== 'player') return;
     const rect = canvas.getBoundingClientRect();
-    const mx = e.clientX - rect.left;
-    const my = e.clientY - rect.top;
-    const line = getNearestLine(mx, my);
+    const line = getNearestLine(e.clientX - rect.left, e.clientY - rect.top);
     if (line) playerMove(line.type, line.r, line.c);
   });
-
-  // Touch support
   canvas.addEventListener('touchend', e => {
     e.preventDefault();
     if (!gameActive || currentTurn !== 'player') return;
     const rect = canvas.getBoundingClientRect();
     const touch = e.changedTouches[0];
-    const mx = touch.clientX - rect.left;
-    const my = touch.clientY - rect.top;
-    const line = getNearestLine(mx, my);
+    const line = getNearestLine(touch.clientX - rect.left, touch.clientY - rect.top);
     if (line) playerMove(line.type, line.r, line.c);
   });
 
-  // Nav scroll
   window.addEventListener('scroll', () => {
     document.getElementById('mainNav').classList.toggle('scrolled', window.scrollY > 20);
   });
 
-  // Reveal on scroll
   const observer = new IntersectionObserver(entries => {
     entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
   }, { threshold: 0.15 });
   document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-  // Tagline reveal
   setTimeout(() => {
     document.getElementById('heroTagline').classList.add('visible');
   }, 900);
 
-  // Chat
   setupChat();
 });
 
@@ -1224,12 +1178,23 @@ function getCookie(name) {
 ═══════════════════════════════════════════ */
 let currentLang = 'es';
 
+const eyebrowTranslations = {
+  es: ['Manufactura','Logística','Finanzas','Salud','Legal','E-commerce'],
+  en: ['Manufacturing','Logistics','Finance','Healthcare','Legal','E-commerce'],
+  ru: ['Производство','Логистика','Финансы','Здоровье','Право','E-commerce']
+};
+
 function setLang(lang) {
   currentLang = lang;
   document.querySelectorAll('[data-' + lang + ']').forEach(el => {
     const val = el.getAttribute('data-' + lang);
     if (el.tagName === 'INPUT') el.placeholder = val;
     else el.textContent = val;
+  });
+  // Update eyebrow items
+  const items = eyebrowTranslations[lang] || eyebrowTranslations.es;
+  document.querySelectorAll('.eyebrow-item').forEach((el, i) => {
+    el.textContent = items[i] || '';
   });
   document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
   document.getElementById('lang' + lang.charAt(0).toUpperCase() + lang.slice(1)).classList.add('active');
