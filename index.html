@@ -4,19 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>DISRUPTHINGS — Automatización e IA</title>
-
-<!-- ─────────────────────────────────────────────────────────────────
-     FUENTES
-     Cambia la URL de @import para cambiar las tipografías del sitio.
-───────────────────────────────────────────────────────────────────── -->
 <style>
   @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&display=swap');
 
-  /* ═══════════════════════════════════════════
-     TOKENS GLOBALES
-     Todo el color y las métricas base viven aquí.
-     Cambia una variable → cambia todo el sitio.
-  ═══════════════════════════════════════════ */
   :root {
     --black:       #0D0D0D;
     --orange:      #E8470A;
@@ -41,18 +31,9 @@
     -webkit-font-smoothing: antialiased;
   }
 
-  /* ═══════════════════════════════════════════
-     NAV — barra superior fija
-     Altura controlada por padding: 22px 56px.
-     El borde inferior aparece al hacer scroll (clase .scrolled).
-     Para mover el logo → .logo-nav
-     Para mover los links → .nav-links a
-     Para mover el selector de idioma → .nav-right / .lang-btn
-  ═══════════════════════════════════════════ */
   nav {
     position: fixed; top: 0; left: 0; right: 0; z-index: 100;
     display: flex; align-items: center; justify-content: space-between;
-    /* ↓ Aumentado de 18px a 22px para dar más altura a la barra */
     padding: 22px 56px;
     background: rgba(13,13,13,0.98);
     border-bottom: 1px solid transparent;
@@ -60,9 +41,7 @@
   }
   nav.scrolled { border-bottom-color: var(--dim); }
 
-  /* Logo en la nav */
   .logo-nav {
-    /* ↓ Aumentado de 13px a 15px */
     font-size: 15px; letter-spacing: 3px;
     text-decoration: none; color: var(--light); display: flex; align-items: baseline;
   }
@@ -70,18 +49,15 @@
   .logo-nav .T      { color: var(--orange); font-weight: 300; }
   .logo-nav .hings  { font-weight: 300; color: #BBBBBB; }
 
-  /* Links de navegación */
   .nav-links { display: flex; align-items: center; gap: 36px; list-style: none; }
   .nav-links a {
     color: #AAAAAA; text-decoration: none;
-    /* ↓ Aumentado de 10px a 11px */
     font-size: 11px;
     letter-spacing: 3px; text-transform: uppercase; transition: color 0.2s;
     font-weight: 600;
   }
   .nav-links a:hover { color: var(--light); }
 
-  /* Selector de idioma */
   .nav-right {
     display: flex; align-items: center; gap: 4px;
     background: var(--surface2);
@@ -92,14 +68,12 @@
     background: none;
     border: none;
     color: #888888;
-    /* ↓ Aumentado de 10px a 11px */
     font-size: 11px;
     letter-spacing: 2px;
     text-transform: uppercase;
     cursor: pointer;
     font-family: inherit;
     font-weight: 700;
-    /* ↓ Aumentado el padding vertical de 5px a 7px */
     padding: 7px 12px;
     transition: all 0.2s;
     line-height: 1;
@@ -113,12 +87,6 @@
     background: var(--dim);
   }
 
-  /* ═══════════════════════════════════════════
-     HERO — sección de pantalla completa con el juego
-     El canvas (#timbiricheCanvas) llena todo el fondo.
-     El contenido de texto va en .hero-content (z-index: 2).
-     Para ajustar el tamaño del logo grande → .hl-disrup / .hl-t / .hl-hings (clamp)
-  ═══════════════════════════════════════════ */
   #hero {
     position: relative; width: 100%; height: 100vh;
     display: flex; align-items: center; justify-content: center;
@@ -144,7 +112,6 @@
     padding: 0 20px;
   }
 
-  /* Eyebrow: industrias arriba del logo */
   .hero-eyebrow {
     font-size: 10px; letter-spacing: 3px; color: #FFFFFF;
     text-transform: uppercase; margin-bottom: 24px;
@@ -155,7 +122,6 @@
   .eyebrow-item { color: #FFFFFF; white-space: nowrap; }
   .eyebrow-dot  { color: var(--orange); font-weight: 900; margin: 0 8px; line-height: 1; }
 
-  /* Logo hero grande */
   .hero-logo {
     display: flex; align-items: baseline; justify-content: center;
     line-height: 1; margin-bottom: 10px;
@@ -176,7 +142,6 @@
     font-weight: 200; letter-spacing: -4px; color: #CCCCCC;
   }
 
-  /* Sub-tagline AI · AUTOMATION */
   .hero-sub {
     font-size: 9px; letter-spacing: 8px;
     text-transform: uppercase; margin-bottom: 48px;
@@ -188,7 +153,6 @@
   .sub-sep  { color: var(--orange); font-weight: 900; }
   .sub-auto { color: #FFFFFF; font-weight: 800; letter-spacing: 8px; }
 
-  /* Tagline principal hero */
   .hero-tagline {
     font-size: clamp(18px, 2.2vw, 22px); color: #FFFFFF; font-weight: 600;
     max-width: 420px; margin: 0 auto 36px; line-height: 1.5;
@@ -198,7 +162,6 @@
   }
   .hero-tagline.visible { opacity: 1; }
 
-  /* Botón CTA hero */
   .hero-cta {
     display: inline-block; pointer-events: all;
     background: none;
@@ -212,7 +175,6 @@
   }
   .hero-cta:hover { border-color: var(--orange); color: var(--orange); background: var(--orange-dim); }
 
-  /* HUD del juego: puntaje (arriba derecha) */
   #gameScore {
     position: absolute; top: 80px; right: 20px; z-index: 3;
     background: rgba(13,13,13,0.85);
@@ -231,7 +193,6 @@
   #gameScore .score-you  { color: var(--orange); font-weight: 500; }
   #gameScore .score-bot  { color: #5599FF; font-weight: 500; }
 
-  /* Easter egg: overlay central al cerrar el logo */
   #easterEgg {
     display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
     z-index: 5; text-align: center; pointer-events: none;
@@ -254,7 +215,6 @@
     to   { opacity: 1; transform: translate(-50%, -50%) scale(1); }
   }
 
-  /* Modal de email (actualmente desactivado — ver JS) */
   #emailModal {
     display: none; position: fixed; inset: 0; z-index: 200;
     background: rgba(0,0,0,0.85);
@@ -279,7 +239,6 @@
   .modal-skip    { display: block; margin-top: 14px; font-size: 10px; color: #888888; cursor: pointer; letter-spacing: 2px; text-transform: uppercase; text-decoration: none; transition: color 0.2s; font-weight: 500; padding: 6px 0; border-top: 1px solid #2A2A2A; }
   .modal-skip:hover { color: #CCCCCC; }
 
-  /* Overlay de resultado del partido (no se usa si juego es infinito, pero se mantiene para empates manuales) */
   #winOverlay {
     display: none; position: absolute; inset: 0; z-index: 4;
     background: rgba(13,13,13,0.9);
@@ -292,7 +251,6 @@
   .win-restart { background: none; border: 1px solid var(--dim); color: #888; padding: 10px 28px; font-size: 9px; letter-spacing: 4px; text-transform: uppercase; cursor: pointer; font-family: inherit; transition: all 0.2s; }
   .win-restart:hover { border-color: var(--orange); color: var(--orange); }
 
-  /* Indicador de scroll */
   .scroll-hint {
     position: absolute; bottom: 28px; left: 50%; transform: translateX(-50%);
     display: flex; flex-direction: column; align-items: center; gap: 8px;
@@ -301,11 +259,6 @@
   }
   .scroll-line { width: 1px; height: 28px; background: linear-gradient(to bottom, #444, transparent); animation: scrollPulse 2s infinite; }
 
-  /* ═══════════════════════════════════════════
-     LAYOUT GENERAL
-     Cambia padding de las secciones aquí.
-     .container controla el ancho máximo del contenido (1040px).
-  ═══════════════════════════════════════════ */
   section { padding: 96px 0; }
   .container { max-width: 1040px; margin: 0 auto; padding: 0 56px; }
 
@@ -323,11 +276,6 @@
     line-height: 1.9; font-weight: 300;
   }
 
-  /* ═══════════════════════════════════════════
-     SERVICES — sección #services
-     Grid de 3 columnas. Cada tarjeta → .service-card
-     Precio → .service-price
-  ═══════════════════════════════════════════ */
   #services { background: var(--surface); }
   .services-header {
     display: grid; grid-template-columns: 1fr 1fr; gap: 72px;
@@ -355,10 +303,6 @@
   .service-desc  { font-size: 12px; color: #888888; line-height: 1.8; font-weight: 300; margin-bottom: 18px; }
   .service-price { font-size: 11px; color: var(--orange); font-family: 'DM Mono', monospace; font-weight: 500; }
 
-  /* ═══════════════════════════════════════════
-     INDUSTRIES — sección #industries
-     Layout: lista a la izquierda, stat a la derecha.
-  ═══════════════════════════════════════════ */
   #industries { background: var(--black); }
   .industries-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 72px; align-items: center; }
   .industry-list { list-style: none; }
@@ -372,13 +316,6 @@
   .industries-stat-label { font-size: 10px; color: #888; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 28px; line-height: 1.7; font-weight: 500; }
   .industries-quote      { font-size: 13px; line-height: 1.9; color: #555; font-weight: 300; font-style: italic; }
 
-  /* ═══════════════════════════════════════════
-     PRICING — sección #pricing
-     Chat simulado a la izquierda, info a la derecha.
-     TODO: reemplazar chat simulado con agente N8N real de cotizaciones.
-           El agente debe: recibir descripción del proceso, estimar horas,
-           proponer rango de precio, y agendar llamada via Calendly.
-  ═══════════════════════════════════════════ */
   #pricing { background: var(--surface); }
   .pricing-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 72px; }
   .chat-container { background: var(--black); border: 1px solid var(--dim); height: 460px; display: flex; flex-direction: column; }
@@ -400,32 +337,34 @@
   .chat-input::placeholder { color: #444; }
   .chat-send { background: none; border: 1px solid var(--dim); color: #888; padding: 8px 16px; font-size: 9px; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; font-family: inherit; transition: all 0.2s; font-weight: 600; }
   .chat-send:hover { border-color: var(--orange); color: var(--orange); }
+  /* Disabled state while AI is responding */
+  .chat-send:disabled { opacity: 0.3; cursor: not-allowed; border-color: var(--dim); color: #555; }
+  .chat-input:disabled { opacity: 0.5; cursor: not-allowed; }
+
   .pricing-info { padding: 4px 0; }
   .pricing-note { font-size: 11px; color: #666; letter-spacing: 0.3px; margin-bottom: 24px; line-height: 1.9; }
   .pricing-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px; }
   .tag { padding: 6px 12px; border: 1px solid var(--dim); font-size: 9px; letter-spacing: 2px; color: #888; text-transform: uppercase; cursor: pointer; transition: all 0.2s; font-weight: 500; }
   .tag:hover { border-color: var(--orange); color: var(--orange); }
 
-  /* ═══════════════════════════════════════════
-     CONTACT — sección #contact
-     Título extra-grande centrado.
-     ↓ Se aumentó padding de 128px a 180px (top/bottom)
-       y el font-size del título de 36-80px → 52-120px
-       para que "¿Listo para automatizar? Hablemos." sea imposible de ignorar.
-  ═══════════════════════════════════════════ */
+  /* Calendly link inside chat */
+  .msg.bot a {
+    color: var(--orange);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(232,71,10,0.4);
+    transition: border-color 0.2s;
+  }
+  .msg.bot a:hover { border-bottom-color: var(--orange); }
+
   #contact {
     background: var(--black);
     text-align: center;
-    /* ↓ Más espacio arriba y abajo — de 128px a 180px */
     padding: 180px 0 200px;
   }
 
-  /* Título gigante de contacto */
   .contact-title {
-    /* ↓ Rango ampliado: mínimo 52px, máximo 120px (antes 36-80px) */
     font-size: clamp(52px, 11vw, 120px);
     font-weight: 900;
-    /* ↓ Line-height más cerrado para que las líneas queden juntas y se lean como bloque */
     line-height: 0.88;
     letter-spacing: -4px;
     margin-bottom: 56px;
@@ -434,10 +373,8 @@
   .contact-line.accent  { color: var(--orange); font-weight: 300; }
   .contact-line.muted   { color: #444; }
 
-  /* Links de contacto (email, llamada, LinkedIn) */
   .contact-links {
     display: flex; justify-content: center; gap: 44px;
-    /* ↓ Más espacio entre el título y los links */
     margin-top: 64px;
     flex-wrap: wrap;
   }
@@ -447,9 +384,6 @@
   }
   .contact-link:hover { color: var(--orange); }
 
-  /* ═══════════════════════════════════════════
-     FOOTER
-  ═══════════════════════════════════════════ */
   footer { padding: 24px 56px; border-top: 1px solid #1A1A1A; display: flex; align-items: center; justify-content: space-between; }
   .footer-logo { font-size: 11px; letter-spacing: 3px; color: #666; display: flex; align-items: baseline; }
   .footer-logo .disrup { font-weight: 800; color: #888; }
@@ -457,9 +391,6 @@
   .footer-logo .hings  { font-weight: 300; }
   .footer-copy { font-size: 9px; color: #444; letter-spacing: 1px; }
 
-  /* ═══════════════════════════════════════════
-     ANIMACIONES GLOBALES
-  ═══════════════════════════════════════════ */
   @keyframes fadeUp {
     from { opacity: 0; transform: translateY(14px); }
     to   { opacity: 1; transform: translateY(0); }
@@ -473,13 +404,9 @@
     50%      { opacity: 0.4; }
   }
 
-  /* Clase para elementos que aparecen al hacer scroll */
   .reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.7s, transform 0.7s; }
   .reveal.visible { opacity: 1; transform: translateY(0); }
 
-  /* ═══════════════════════════════════════════
-     RESPONSIVE — breakpoint < 860px (móvil / tablet)
-  ═══════════════════════════════════════════ */
   @media (max-width: 860px) {
     nav { padding: 16px 20px; }
     .nav-links { display: none; }
@@ -494,7 +421,6 @@
     #gameScore { top: 72px; right: 10px; }
     .hero-eyebrow { font-size: 8px; gap: 0; }
     .eyebrow-dot  { margin: 0 5px; }
-    /* Contact en móvil: clamp mínimo sube un poco */
     .contact-title { font-size: clamp(40px, 12vw, 80px); letter-spacing: -2px; }
     #contact { padding: 100px 0 120px; }
   }
@@ -502,11 +428,6 @@
 </head>
 <body>
 
-<!-- ─────────────────────────────────────────────────────────────────
-     MODAL DE EMAIL — actualmente saltado automáticamente
-     Para activarlo: remover la llamada a initGame() sin modal en el JS
-     y descomentar la apertura del modal.
-───────────────────────────────────────────────────────────────────── -->
 <div id="emailModal">
   <div class="modal-box">
     <p class="modal-eyebrow" id="modalEyebrow">Connect the Dots</p>
@@ -527,9 +448,6 @@
   </div>
 </div>
 
-<!-- ─────────────────────────────────────────────────────────────────
-     NAV — barra superior fija
-───────────────────────────────────────────────────────────────────── -->
 <nav id="mainNav">
   <a href="#" class="logo-nav">
     <span class="disrup">DISRUP</span><span class="T">T</span><span class="hings">HINGS</span>
@@ -547,22 +465,17 @@
   </div>
 </nav>
 
-<!-- ─────────────────────────────────────────────────────────────────
-     HERO — canvas de juego + contenido de texto
-───────────────────────────────────────────────────────────────────── -->
 <section id="hero">
   <div id="gameWrapper">
     <canvas id="timbiricheCanvas"></canvas>
   </div>
   <div id="heroGradient"></div>
 
-  <!-- HUD: puntaje del juego (arriba derecha) -->
   <div id="gameScore">
     <div class="score-line"><span class="score-you" id="hudYou">TÚ: 0</span></div>
     <div class="score-line"><span class="score-bot" id="hudBot">CPU: 0</span></div>
   </div>
 
-  <!-- Overlay de fin de tablero (se reactiva automáticamente en modo infinito) -->
   <div id="winOverlay">
     <div class="win-title" id="winTitle">GANASTE</div>
     <div class="win-sub"   id="winSub">Conectaste los puntos</div>
@@ -570,7 +483,6 @@
             data-es="Jugar de nuevo" data-en="Play again" data-ru="Сыграть снова">Jugar de nuevo</button>
   </div>
 
-  <!-- Easter egg: aparece al encerrar el logo central con cuadros -->
   <div id="easterEgg">
     <div class="egg-box">
       <span class="egg-emoji">🎯</span>
@@ -580,7 +492,6 @@
     </div>
   </div>
 
-  <!-- Texto hero: eyebrow, logo, sub, tagline, CTA -->
   <div class="hero-content">
     <p class="hero-eyebrow" id="heroEyebrow">
       <span class="eyebrow-item" data-key="ind1">Manufactura</span><span class="eyebrow-dot">·</span>
@@ -613,9 +524,6 @@
   </div>
 </section>
 
-<!-- ─────────────────────────────────────────────────────────────────
-     SERVICES
-───────────────────────────────────────────────────────────────────── -->
 <section id="services">
   <div class="container">
     <div class="services-header reveal">
@@ -636,153 +544,68 @@
     <div class="services-grid reveal">
       <div class="service-card">
         <p class="service-num">01</p>
-        <h3 class="service-name"
-            data-es="Automatización de Procesos"
-            data-en="Process Automation"
-            data-ru="Автоматизация процессов">Automatización de Procesos</h3>
-        <p class="service-desc"
-           data-es="Eliminamos trabajo manual. Conectamos sistemas. Hacemos que tus operaciones escalen sin escalar el equipo."
-           data-en="We eliminate manual work. Connect systems. Scale your operations without expanding your team."
-           data-ru="Устраняем ручной труд. Соединяем системы. Масштабируем операции без расширения команды.">Eliminamos trabajo manual. Conectamos sistemas. Hacemos que tus operaciones escalen sin escalar el equipo.</p>
+        <h3 class="service-name" data-es="Automatización de Procesos" data-en="Process Automation" data-ru="Автоматизация процессов">Automatización de Procesos</h3>
+        <p class="service-desc" data-es="Eliminamos trabajo manual. Conectamos sistemas. Hacemos que tus operaciones escalen sin escalar el equipo." data-en="We eliminate manual work. Connect systems. Scale your operations without expanding your team." data-ru="Устраняем ручной труд. Соединяем системы. Масштабируем операции без расширения команды.">Eliminamos trabajo manual. Conectamos sistemas. Hacemos que tus operaciones escalen sin escalar el equipo.</p>
         <p class="service-price">$800 – $8,000 USD</p>
       </div>
       <div class="service-card">
         <p class="service-num">02</p>
-        <h3 class="service-name"
-            data-es="Integración de Sistemas"
-            data-en="Systems Integration"
-            data-ru="Интеграция систем">Integración de Sistemas</h3>
-        <p class="service-desc"
-           data-es="APIs, bases de datos, plataformas SaaS. Los conectamos para que hablen entre sí sin fricción."
-           data-en="APIs, databases, SaaS platforms. We connect them so data flows without friction."
-           data-ru="API, базы данных, SaaS-платформы. Связываем их так, чтобы данные передавались без потерь.">APIs, bases de datos, plataformas SaaS. Los conectamos para que hablen entre sí sin fricción.</p>
+        <h3 class="service-name" data-es="Integración de Sistemas" data-en="Systems Integration" data-ru="Интеграция систем">Integración de Sistemas</h3>
+        <p class="service-desc" data-es="APIs, bases de datos, plataformas SaaS. Los conectamos para que hablen entre sí sin fricción." data-en="APIs, databases, SaaS platforms. We connect them so data flows without friction." data-ru="API, базы данных, SaaS-платформы. Связываем их так, чтобы данные передавались без потерь.">APIs, bases de datos, plataformas SaaS. Los conectamos para que hablen entre sí sin fricción.</p>
         <p class="service-price">$600 – $5,000 USD</p>
       </div>
       <div class="service-card">
         <p class="service-num">03</p>
-        <h3 class="service-name"
-            data-es="Agentes de IA"
-            data-en="AI Agents"
-            data-ru="ИИ-агенты">Agentes de IA</h3>
-        <p class="service-desc"
-           data-es="Agentes que piensan, deciden y ejecutan. Desde atención al cliente hasta análisis financiero."
-           data-en="Agents that reason, decide and act. From customer support to financial analysis."
-           data-ru="Агенты, которые анализируют, принимают решения и действуют — от поддержки клиентов до финансового анализа.">Agentes que piensan, deciden y ejecutan. Desde atención al cliente hasta análisis financiero.</p>
+        <h3 class="service-name" data-es="Agentes de IA" data-en="AI Agents" data-ru="ИИ-агенты">Agentes de IA</h3>
+        <p class="service-desc" data-es="Agentes que piensan, deciden y ejecutan. Desde atención al cliente hasta análisis financiero." data-en="Agents that reason, decide and act. From customer support to financial analysis." data-ru="Агенты, которые анализируют, принимают решения и действуют — от поддержки клиентов до финансового анализа.">Agentes que piensan, deciden y ejecutan. Desde atención al cliente hasta análisis financiero.</p>
         <p class="service-price">$1,500 – $12,000 USD</p>
       </div>
       <div class="service-card">
         <p class="service-num">04</p>
-        <h3 class="service-name"
-            data-es="Automatización Financiera"
-            data-en="Financial Automation"
-            data-ru="Финансовая автоматизация">Automatización Financiera</h3>
-        <p class="service-desc"
-           data-es="Conciliaciones, reportes, flujos de aprobación con trazabilidad completa."
-           data-en="Reconciliations, reports, approval workflows with full audit trail."
-           data-ru="Сверки, отчёты, согласования с полной историей операций.">Conciliaciones, reportes, flujos de aprobación con trazabilidad completa.</p>
+        <h3 class="service-name" data-es="Automatización Financiera" data-en="Financial Automation" data-ru="Финансовая автоматизация">Automatización Financiera</h3>
+        <p class="service-desc" data-es="Conciliaciones, reportes, flujos de aprobación con trazabilidad completa." data-en="Reconciliations, reports, approval workflows with full audit trail." data-ru="Сверки, отчёты, согласования с полной историей операций.">Conciliaciones, reportes, flujos de aprobación con trazabilidad completa.</p>
         <p class="service-price">$2,000 – $20,000 USD</p>
       </div>
       <div class="service-card">
         <p class="service-num">05</p>
-        <h3 class="service-name"
-            data-es="Fractional CPO"
-            data-en="Fractional CPO"
-            data-ru="Fractional CPO">Fractional CPO</h3>
-        <p class="service-desc"
-           data-es="Estrategia de producto e IA como servicio. Experiencia corporativa para PyMEs."
-           data-en="Product and AI strategy as a service. Enterprise-level expertise for SMBs."
-           data-ru="Стратегия продукта и ИИ как сервис. Корпоративный опыт — для среднего бизнеса.">Estrategia de producto e IA como servicio. Experiencia corporativa para PyMEs.</p>
+        <h3 class="service-name" data-es="Fractional CPO" data-en="Fractional CPO" data-ru="Fractional CPO">Fractional CPO</h3>
+        <p class="service-desc" data-es="Estrategia de producto e IA como servicio. Experiencia corporativa para PyMEs." data-en="Product and AI strategy as a service. Enterprise-level expertise for SMBs." data-ru="Стратегия продукта и ИИ как сервис. Корпоративный опыт — для среднего бизнеса.">Estrategia de producto e IA como servicio. Experiencia corporativa para PyMEs.</p>
         <p class="service-price">$3,000 – $8,000 / mes</p>
       </div>
       <div class="service-card">
         <p class="service-num">06</p>
-        <h3 class="service-name"
-            data-es="Workshops"
-            data-en="Workshops"
-            data-ru="Воркшопы">Workshops</h3>
-        <p class="service-desc"
-           data-es="Sesiones intensivas para que tu equipo aproveche la automatización y la IA."
-           data-en="Intensive hands-on sessions to get your team up to speed with automation and AI."
-           data-ru="Интенсивные сессии, чтобы ваша команда освоила автоматизацию и ИИ на практике.">Sesiones intensivas para que tu equipo aproveche la automatización y la IA.</p>
+        <h3 class="service-name" data-es="Workshops" data-en="Workshops" data-ru="Воркшопы">Workshops</h3>
+        <p class="service-desc" data-es="Sesiones intensivas para que tu equipo aproveche la automatización y la IA." data-en="Intensive hands-on sessions to get your team up to speed with automation and AI." data-ru="Интенсивные сессии, чтобы ваша команда освоила автоматизацию и ИИ на практике.">Sesiones intensivas para que tu equipo aproveche la automatización y la IA.</p>
         <p class="service-price">$800 – $3,500 USD</p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ─────────────────────────────────────────────────────────────────
-     INDUSTRIES
-───────────────────────────────────────────────────────────────────── -->
 <section id="industries">
   <div class="container">
     <div class="industries-layout reveal">
       <div>
-        <p class="section-label"
-           data-es="Para quién" data-en="Who we serve" data-ru="Кому мы помогаем">Para quién</p>
-        <h2 class="section-title"
-            data-es="Cualquier industria con procesos repetitivos."
-            data-en="Any industry with repetitive processes."
-            data-ru="Любая отрасль с повторяющимися процессами.">Cualquier industria con procesos repetitivos.</h2>
+        <p class="section-label" data-es="Para quién" data-en="Who we serve" data-ru="Кому мы помогаем">Para quién</p>
+        <h2 class="section-title" data-es="Cualquier industria con procesos repetitivos." data-en="Any industry with repetitive processes." data-ru="Любая отрасль с повторяющимися процессами.">Cualquier industria con procesos repetitivos.</h2>
         <ul class="industry-list" style="margin-top:28px">
-          <li class="industry-item"><span class="industry-dot"></span>
-            <span class="industry-name"
-                  data-es="Servicios Financieros"
-                  data-en="Financial Services"
-                  data-ru="Финансовые услуги">Servicios Financieros</span></li>
-          <li class="industry-item"><span class="industry-dot"></span>
-            <span class="industry-name"
-                  data-es="Legal &amp; Cumplimiento"
-                  data-en="Legal &amp; Compliance"
-                  data-ru="Юридические услуги и комплаенс">Legal &amp; Cumplimiento</span></li>
-          <li class="industry-item"><span class="industry-dot"></span>
-            <span class="industry-name"
-                  data-es="Salud &amp; Farmacéutica"
-                  data-en="Healthcare &amp; Pharma"
-                  data-ru="Здравоохранение и фармацевтика">Salud &amp; Farmacéutica</span></li>
-          <li class="industry-item"><span class="industry-dot"></span>
-            <span class="industry-name"
-                  data-es="Manufactura &amp; Logística"
-                  data-en="Manufacturing &amp; Logistics"
-                  data-ru="Производство и логистика">Manufactura &amp; Logística</span></li>
-          <li class="industry-item"><span class="industry-dot"></span>
-            <span class="industry-name"
-                  data-es="E-commerce &amp; Retail"
-                  data-en="E-commerce &amp; Retail"
-                  data-ru="Электронная торговля и ритейл">E-commerce &amp; Retail</span></li>
-          <li class="industry-item"><span class="industry-dot"></span>
-            <span class="industry-name"
-                  data-es="Construcción &amp; Bienes Raíces"
-                  data-en="Construction &amp; Real Estate"
-                  data-ru="Строительство и недвижимость">Construcción &amp; Bienes Raíces</span></li>
+          <li class="industry-item"><span class="industry-dot"></span><span class="industry-name" data-es="Servicios Financieros" data-en="Financial Services" data-ru="Финансовые услуги">Servicios Financieros</span></li>
+          <li class="industry-item"><span class="industry-dot"></span><span class="industry-name" data-es="Legal &amp; Cumplimiento" data-en="Legal &amp; Compliance" data-ru="Юридические услуги и комплаенс">Legal &amp; Cumplimiento</span></li>
+          <li class="industry-item"><span class="industry-dot"></span><span class="industry-name" data-es="Salud &amp; Farmacéutica" data-en="Healthcare &amp; Pharma" data-ru="Здравоохранение и фармацевтика">Salud &amp; Farmacéutica</span></li>
+          <li class="industry-item"><span class="industry-dot"></span><span class="industry-name" data-es="Manufactura &amp; Logística" data-en="Manufacturing &amp; Logistics" data-ru="Производство и логистика">Manufactura &amp; Logística</span></li>
+          <li class="industry-item"><span class="industry-dot"></span><span class="industry-name" data-es="E-commerce &amp; Retail" data-en="E-commerce &amp; Retail" data-ru="Электронная торговля и ритейл">E-commerce &amp; Retail</span></li>
+          <li class="industry-item"><span class="industry-dot"></span><span class="industry-name" data-es="Construcción &amp; Bienes Raíces" data-en="Construction &amp; Real Estate" data-ru="Строительство и недвижимость">Construcción &amp; Bienes Raíces</span></li>
         </ul>
       </div>
       <div class="industries-right">
         <div class="industries-stat">73%</div>
-        <p class="industries-stat-label"
-           data-es="de PyMEs pierden más de 10 horas semanales en tareas automatizables."
-           data-en="of SMBs waste 10+ hours weekly on tasks that could be automated."
-           data-ru="малого и среднего бизнеса теряют более 10 часов в неделю на задачи, поддающиеся автоматизации.">
-          de PyMEs pierden más de 10 horas semanales en tareas automatizables.</p>
-        <p class="industries-quote"
-           data-es='"No necesitas más gente. Necesitas mejores sistemas."'
-           data-en='"You don&apos;t need more people. You need better systems."'
-           data-ru='"Вам не нужно больше людей. Вам нужны более умные системы."'>
-          "No necesitas más gente. Necesitas mejores sistemas."</p>
+        <p class="industries-stat-label" data-es="de PyMEs pierden más de 10 horas semanales en tareas automatizables." data-en="of SMBs waste 10+ hours weekly on tasks that could be automated." data-ru="малого и среднего бизнеса теряют более 10 часов в неделю на задачи, поддающиеся автоматизации.">de PyMEs pierden más de 10 horas semanales en tareas automatizables.</p>
+        <p class="industries-quote" data-es='"No necesitas más gente. Necesitas mejores sistemas."' data-en='"You don&apos;t need more people. You need better systems."' data-ru='"Вам не нужно больше людей. Вам нужны более умные системы."'>"No necesitas más gente. Necesitas mejores sistemas."</p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ─────────────────────────────────────────────────────────────────
-     PRICING
-     TODO: Reemplazar el chat simulado con agente N8N real.
-     El flujo del agente debería:
-       1. Preguntar qué proceso quiere automatizar el usuario
-       2. Estimar horas de implementación según complejidad
-       3. Calcular rango de precio (basado en tabla de servicios)
-       4. Proponer siguiente paso: llamada via Calendly o email
-     Herramientas: N8N webhook → Claude → respuesta estructurada → UI
-───────────────────────────────────────────────────────────────────── -->
 <section id="pricing">
   <div class="container">
     <div class="pricing-layout reveal">
@@ -795,32 +618,17 @@
           <span class="chat-status">● ONLINE</span>
         </div>
         <div class="chat-messages" id="chatMessages">
-          <div class="msg bot"
-               data-es="Hola. Soy el agente de DISRUPTHINGS. ¿En qué puedo ayudarte hoy?"
-               data-en="Hello. I'm the DISRUPTHINGS agent. How can I help you today?"
-               data-ru="Привет. Я агент DISRUPTHINGS. Чем могу помочь?">
-            Hola. Soy el agente de DISRUPTHINGS. ¿En qué puedo ayudarte hoy?</div>
+          <div class="msg bot">Hola. Soy el agente de DISRUPTHINGS. Cuéntame qué proceso quieres automatizar y te doy una estimación real.</div>
         </div>
         <div class="chat-input-area">
-          <input type="text" class="chat-input" id="chatInput"
-                 data-es="Escribe algo..." data-en="Type something..." data-ru="Напишите..."
-                 placeholder="Escribe algo...">
-          <button class="chat-send" id="chatSend"
-                  data-es="Enviar" data-en="Send" data-ru="Отправить">Enviar</button>
+          <input type="text" class="chat-input" id="chatInput" placeholder="Escribe algo...">
+          <button class="chat-send" id="chatSend">Enviar</button>
         </div>
       </div>
       <div class="pricing-info">
-        <p class="section-label"
-           data-es="Cómo trabajamos" data-en="How we work" data-ru="Как мы работаем">Cómo trabajamos</p>
-        <h2 class="section-title"
-            data-es="Sin retainers forzados."
-            data-en="No forced retainers."
-            data-ru="Без навязанных контрактов.">Sin retainers forzados.</h2>
-        <p class="pricing-note"
-           data-es="Proyectos fijos o mensualidades. Entregamos en semanas, no meses. Cada automatización tiene ROI medible antes de firmar."
-           data-en="Fixed-scope projects or monthly retainers. We deliver in weeks, not months. Every automation comes with a measurable ROI before you sign."
-           data-ru="Фиксированные проекты или ежемесячные подписки. Сдаём за недели, а не месяцы. Каждая автоматизация — с измеримым ROI до подписания договора.">
-          Proyectos fijos o mensualidades. Entregamos en semanas, no meses. Cada automatización tiene ROI medible antes de firmar.</p>
+        <p class="section-label" data-es="Cómo trabajamos" data-en="How we work" data-ru="Как мы работаем">Cómo trabajamos</p>
+        <h2 class="section-title" data-es="Sin retainers forzados." data-en="No forced retainers." data-ru="Без навязанных контрактов.">Sin retainers forzados.</h2>
+        <p class="pricing-note" data-es="Proyectos fijos o mensualidades. Entregamos en semanas, no meses. Cada automatización tiene ROI medible antes de firmar." data-en="Fixed-scope projects or monthly retainers. We deliver in weeks, not months. Every automation comes with a measurable ROI before you sign." data-ru="Фиксированные проекты или ежемесячные подписки. Сдаём за недели, а не месяцы. Каждая автоматизация — с измеримым ROI до подписания договора.">Proyectos fijos o mensualidades. Entregamos en semanas, no meses. Cada automatización tiene ROI medible antes de firmar.</p>
         <div class="pricing-tags">
           <span class="tag">N8N</span>
           <span class="tag">Make</span>
@@ -835,31 +643,21 @@
   </div>
 </section>
 
-<!-- ─────────────────────────────────────────────────────────────────
-     CONTACT — título enorme, mucho espacio
-───────────────────────────────────────────────────────────────────── -->
 <section id="contact">
   <div class="container">
     <h2 class="contact-title">
-      <span class="contact-line"
-            data-es="¿Listo para" data-en="Ready to" data-ru="Готовы">¿Listo para</span>
-      <span class="contact-line accent"
-            data-es="automatizar?" data-en="automate?" data-ru="автоматизировать?">automatizar?</span>
-      <span class="contact-line muted"
-            data-es="Hablemos." data-en="Let's talk." data-ru="Поговорим.">Hablemos.</span>
+      <span class="contact-line" data-es="¿Listo para" data-en="Ready to" data-ru="Готовы">¿Listo para</span>
+      <span class="contact-line accent" data-es="automatizar?" data-en="automate?" data-ru="автоматизировать?">automatizar?</span>
+      <span class="contact-line muted" data-es="Hablemos." data-en="Let's talk." data-ru="Поговорим.">Hablemos.</span>
     </h2>
     <div class="contact-links">
       <a href="mailto:hola@disrupthings.com" class="contact-link">hola@disrupthings.com</a>
-      <a href="#" class="contact-link"
-         data-es="Agendar llamada" data-en="Book a call" data-ru="Записаться на звонок">Agendar llamada</a>
+      <a href="https://calendly.com/disrupthings/30min" target="_blank" class="contact-link" data-es="Agendar llamada" data-en="Book a call" data-ru="Записаться на звонок">Agendar llamada</a>
       <a href="#" class="contact-link">LinkedIn</a>
     </div>
   </div>
 </section>
 
-<!-- ─────────────────────────────────────────────────────────────────
-     FOOTER
-───────────────────────────────────────────────────────────────────── -->
 <footer>
   <div class="footer-logo">
     <span class="disrup">DISRUP</span><span class="T">T</span><span class="hings">HINGS</span>
@@ -869,65 +667,39 @@
 
 <script>
 /* ═══════════════════════════════════════════════════════════════════
-   TIMBIRICHE (DOTS & BOXES) — MOTOR DEL JUEGO
-   ─────────────────────────────────────────────────────────────────
-   CONFIGURACIÓN PRINCIPAL — cambia estos valores para ajustar el juego:
-     GRID       → número de puntos por lado (9 = tablero 8×8 cuadros)
-     PLAYER_COLOR / BOT_COLOR → colores del jugador y la CPU
-     BOT_DELAY  → milisegundos de espera antes del movimiento del bot
-
-   MODO INFINITO:
-     El juego NO tiene límite de tiempo ni de partidas.
-     Al completarse el tablero se muestra el overlay de resultado
-     con botón "Jugar de nuevo" que reinicia el tablero.
-     El juego SOLO se detiene al cambiar de página.
+   TIMBIRICHE — sin cambios
 ═══════════════════════════════════════════════════════════════════ */
+const GRID        = 9;
+const PLAYER_COLOR = '#E8470A';
+const BOT_COLOR    = '#5599FF';
+const BOT_DELAY    = 500;
 
-const GRID        = 9;           // # de puntos por lado (9 = 8×8 cuadros)
-const PLAYER_COLOR = '#E8470A';  // naranja — jugador humano
-const BOT_COLOR    = '#5599FF';  // azul — CPU
-const BOT_DELAY    = 500;        // ms de delay antes del turno del bot
-
-/* ─── Variables de estado del juego ─── */
 let canvas, ctx;
 let cellW = 1, cellH = 1;
 let offsetX, offsetY;
-
-let hLines, vLines;   // líneas horizontales / verticales
-let boxes;            // propietario de cada cuadro (0=libre, 1=jugador, 2=bot)
+let hLines, vLines, boxes;
 let scores = { player: 0, bot: 0 };
 let currentTurn = 'player';
 let gameActive  = false;
+let hoverLine = null;
+let easterEggShown = false;
+let playerName = 'TÚ';
 
-let hoverLine = null;          // línea que el ratón está sobrevolando
-let easterEggShown = false;    // para no mostrar el easter egg más de una vez
-let playerName = 'TÚ';        // nombre mostrado en el HUD
-
-/* ─────────────────────────────────────────────────────────────────
-   EASTER EGG — Detecta si el jugador encerró el área central del logo
-   La "zona del logo" es un anillo de cuadros de 5×5 alrededor del centro.
-   Si todos los cuadros del borde de ese anillo son del jugador → easter egg.
-───────────────────────────────────────────────────────────────────── */
 function checkLogoEnclosed() {
   if (easterEggShown) return;
-  const cx = Math.floor((GRID - 1) / 2); // columna central → 4
-  const cy = Math.floor((GRID - 1) / 2); // fila central    → 4
+  const cx = Math.floor((GRID - 1) / 2);
+  const cy = Math.floor((GRID - 1) / 2);
   const ring = [];
   for (let r = cy - 2; r <= cy + 2; r++) {
     for (let c = cx - 2; c <= cx + 2; c++) {
       if (r >= 0 && r < GRID - 1 && c >= 0 && c < GRID - 1) {
-        if (r === cy - 2 || r === cy + 2 || c === cx - 2 || c === cx + 2) {
-          ring.push({ r, c });
-        }
+        if (r === cy - 2 || r === cy + 2 || c === cx - 2 || c === cx + 2) ring.push({ r, c });
       }
     }
   }
-  if (ring.length >= 12 && ring.every(({ r, c }) => boxes[r][c] === 1)) {
-    triggerEasterEgg();
-  }
+  if (ring.length >= 12 && ring.every(({ r, c }) => boxes[r][c] === 1)) triggerEasterEgg();
 }
 
-/* Muestra el Easter egg 5 segundos y luego desaparece */
 function triggerEasterEgg() {
   easterEggShown = true;
   const egg = document.getElementById('easterEgg');
@@ -939,10 +711,6 @@ function triggerEasterEgg() {
   }, 5000);
 }
 
-/* ─────────────────────────────────────────────────────────────────
-   INICIALIZACIÓN DEL TABLERO
-   Reinicia todas las estructuras de datos y empieza el turno del jugador.
-───────────────────────────────────────────────────────────────────── */
 function initGame() {
   hLines = Array.from({ length: GRID },     () => new Array(GRID - 1).fill(0));
   vLines = Array.from({ length: GRID - 1 }, () => new Array(GRID).fill(0));
@@ -956,43 +724,31 @@ function initGame() {
   drawBoard();
 }
 
-/* ─────────────────────────────────────────────────────────────────
-   HUD — Actualiza el marcador en pantalla
-───────────────────────────────────────────────────────────────────── */
 function updateHUD() {
   document.getElementById('hudYou').textContent = `TÚ: ${scores.player}`;
   document.getElementById('hudBot').textContent = `CPU: ${scores.bot}`;
 }
 
-/* ─────────────────────────────────────────────────────────────────
-   FIN DE TABLERO
-   Muestra el overlay con el resultado.
-   En modo infinito no hay penalización — el jugador puede reiniciar.
-───────────────────────────────────────────────────────────────────── */
 function endGame() {
   gameActive = false;
-
   const wo = document.getElementById('winOverlay');
   const wt = document.getElementById('winTitle');
   const ws = document.getElementById('winSub');
   const lang = currentLang;
-
   if (scores.player > scores.bot) {
     wt.style.color = PLAYER_COLOR;
-    wt.textContent = lang === 'en' ? 'YOU WIN'      : lang === 'ru' ? 'ПОБЕДА'         : 'GANASTE';
+    wt.textContent = lang === 'en' ? 'YOU WIN' : lang === 'ru' ? 'ПОБЕДА' : 'GANASTE';
     ws.textContent = lang === 'en' ? 'You closed more squares' : lang === 'ru' ? 'Вы закрыли больше квадратов' : 'Cerraste más cuadros';
   } else if (scores.bot > scores.player) {
     wt.style.color = BOT_COLOR;
-    wt.textContent = lang === 'en' ? 'CPU WINS'      : lang === 'ru' ? 'ПОБЕДИЛА CPU'   : 'GANÓ LA CPU';
-    ws.textContent = lang === 'en' ? 'Try again!'    : lang === 'ru' ? 'Попробуй снова!'  : '¡Inténtalo de nuevo!';
+    wt.textContent = lang === 'en' ? 'CPU WINS' : lang === 'ru' ? 'ПОБЕДИЛА CPU' : 'GANÓ LA CPU';
+    ws.textContent = lang === 'en' ? 'Try again!' : lang === 'ru' ? 'Попробуй снова!' : '¡Inténtalo de nuevo!';
   } else {
     wt.style.color = '#FFFFFF';
-    wt.textContent = lang === 'en' ? 'DRAW'          : lang === 'ru' ? 'НИЧЬЯ'          : 'EMPATE';
-    ws.textContent = lang === 'en' ? 'Equal score'   : lang === 'ru' ? 'Одинаковый счёт' : 'Mismo puntaje';
+    wt.textContent = lang === 'en' ? 'DRAW' : lang === 'ru' ? 'НИЧЬЯ' : 'EMPATE';
+    ws.textContent = lang === 'en' ? 'Equal score' : lang === 'ru' ? 'Одинаковый счёт' : 'Mismo puntaje';
   }
   wo.classList.add('open');
-
-  /* Guarda record en localStorage si hay nombre de jugador */
   if (playerName && playerName !== 'TÚ') {
     try {
       const records = JSON.parse(localStorage.getItem('dt_records') || '[]');
@@ -1002,82 +758,55 @@ function endGame() {
   }
 }
 
-/* ─────────────────────────────────────────────────────────────────
-   RESIZE — recalcula métricas del canvas cuando cambia el tamaño de ventana
-   cellW / cellH → ancho y alto de cada celda en píxeles
-   offsetX / offsetY → margen desde el borde del canvas hasta la primera línea
-───────────────────────────────────────────────────────────────────── */
 function resize() {
   const wrapper = document.getElementById('gameWrapper');
   const W = wrapper.clientWidth;
   const H = wrapper.clientHeight;
   canvas.width  = W;
   canvas.height = H;
-
   const isMobile = W < 600;
   const marginX = isMobile ? 20 : 40;
   const marginY = isMobile ? 50 : 72;
-
   cellW = (W - marginX * 2) / (GRID - 1);
   cellH = (H - marginY * 2) / (GRID - 1);
   offsetX = marginX;
   offsetY = marginY;
-
   if (hLines) drawBoard();
 }
 
-/* ─────────────────────────────────────────────────────────────────
-   POSICIÓN DE UN PUNTO en el canvas
-   dotPos(fila, columna) → { x, y } en píxeles
-───────────────────────────────────────────────────────────────────── */
-function dotPos(r, c) {
-  return { x: offsetX + c * cellW, y: offsetY + r * cellH };
-}
+function dotPos(r, c) { return { x: offsetX + c * cellW, y: offsetY + r * cellH }; }
 
-/* ─────────────────────────────────────────────────────────────────
-   DIBUJADO DEL TABLERO
-   Orden: 1) rellenos de cuadros → 2) líneas → 3) puntos
-───────────────────────────────────────────────────────────────────── */
 function drawBoard() {
   if (!ctx) return;
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   const dotR = Math.max(3, Math.round(Math.min(cellW, cellH) * 0.055));
-
-  /* 1. Rellenos de cuadros cerrados */
   for (let r = 0; r < GRID - 1; r++) {
     for (let c = 0; c < GRID - 1; c++) {
       if (!boxes[r][c]) continue;
       const p = dotPos(r, c);
       ctx.fillStyle = boxes[r][c] === 1 ? 'rgba(232,71,10,0.18)' : 'rgba(85,153,255,0.15)';
       ctx.fillRect(p.x, p.y, cellW, cellH);
-      /* Inicial del jugador en el centro del cuadro */
       ctx.fillStyle = boxes[r][c] === 1 ? PLAYER_COLOR : BOT_COLOR;
       ctx.font = `bold ${Math.floor(Math.min(cellW, cellH) * 0.28)}px Helvetica Neue`;
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
       ctx.globalAlpha = 0.6;
-      ctx.fillText(boxes[r][c] === 1 ? (playerName ? playerName[0].toUpperCase() : 'T') : '⊕',
-                   p.x + cellW / 2, p.y + cellH / 2);
+      ctx.fillText(boxes[r][c] === 1 ? (playerName ? playerName[0].toUpperCase() : 'T') : '⊕', p.x + cellW / 2, p.y + cellH / 2);
       ctx.globalAlpha = 1;
     }
   }
-
-  /* 2. Líneas horizontales */
   for (let r = 0; r < GRID; r++) {
     for (let c = 0; c < GRID - 1; c++) {
       const isHover = hoverLine && hoverLine.type === 'h' && hoverLine.r === r && hoverLine.c === c && !hLines[r][c];
       drawLine(dotPos(r, c), dotPos(r, c + 1), hLines[r][c], isHover);
     }
   }
-  /* 2b. Líneas verticales */
   for (let r = 0; r < GRID - 1; r++) {
     for (let c = 0; c < GRID; c++) {
       const isHover = hoverLine && hoverLine.type === 'v' && hoverLine.r === r && hoverLine.c === c && !vLines[r][c];
       drawLine(dotPos(r, c), dotPos(r + 1, c), vLines[r][c], isHover);
     }
   }
-
-  /* 3. Puntos */
   for (let r = 0; r < GRID; r++) {
     for (let c = 0; c < GRID; c++) {
       const p = dotPos(r, c);
@@ -1089,7 +818,6 @@ function drawBoard() {
   }
 }
 
-/* Dibuja una línea individual con su color según propietario / hover */
 function drawLine(p1, p2, owner, isHover) {
   ctx.beginPath();
   ctx.moveTo(p1.x, p1.y);
@@ -1103,14 +831,9 @@ function drawLine(p1, p2, owner, isHover) {
   ctx.lineWidth = 1;
 }
 
-/* ─────────────────────────────────────────────────────────────────
-   DETECCIÓN DE LÍNEA más cercana al cursor
-   threshold → zona de captura en px (40% del tamaño de celda)
-───────────────────────────────────────────────────────────────────── */
 function getNearestLine(mx, my) {
   const threshold = Math.min(cellW, cellH) * 0.4;
   let best = null, bestDist = Infinity;
-
   for (let r = 0; r < GRID; r++) {
     for (let c = 0; c < GRID - 1; c++) {
       const d = distToSegment(mx, my, dotPos(r, c), dotPos(r, c + 1));
@@ -1132,16 +855,12 @@ function distToSegment(px, py, a, b) {
   return Math.hypot(px - a.x - t * dx, py - a.y - t * dy);
 }
 
-/* ─────────────────────────────────────────────────────────────────
-   MECÁNICA DE LÍNEAS Y CUADROS
-───────────────────────────────────────────────────────────────────── */
 function claimLine(type, r, c, who) {
   if (type === 'h') { if (hLines[r][c]) return false; hLines[r][c] = who; }
   else              { if (vLines[r][c]) return false; vLines[r][c] = who; }
   return true;
 }
 
-/* Chequea si algún cuadro nuevo quedó cerrado tras el último movimiento */
 function checkBoxes(who) {
   let closed = 0;
   for (let r = 0; r < GRID - 1; r++) {
@@ -1154,9 +873,6 @@ function checkBoxes(who) {
   return closed;
 }
 
-/* ─────────────────────────────────────────────────────────────────
-   TURNO DEL JUGADOR HUMANO
-───────────────────────────────────────────────────────────────────── */
 function playerMove(type, r, c) {
   if (!gameActive || currentTurn !== 'player') return;
   if (!claimLine(type, r, c, 1)) return;
@@ -1166,17 +882,9 @@ function playerMove(type, r, c) {
   drawBoard();
   if (closed > 0) checkLogoEnclosed();
   if (isBoardComplete()) { endGame(); return; }
-  /* Si no cerró cuadro → turno del bot; si cerró → repite turno */
   if (closed === 0) { currentTurn = 'bot'; setTimeout(botMove, BOT_DELAY); }
 }
 
-/* ─────────────────────────────────────────────────────────────────
-   TURNO DE LA CPU (bot)
-   Estrategia en 3 capas:
-     1. Si puede cerrar un cuadro → lo hace
-     2. Si no → elige una línea que no deje cuadros de 3 lados al rival
-     3. Si todo es arriesgado → mueve aleatoriamente
-───────────────────────────────────────────────────────────────────── */
 function botMove() {
   if (!gameActive) return;
   const move = getBotMove();
@@ -1187,7 +895,6 @@ function botMove() {
   updateHUD();
   drawBoard();
   if (isBoardComplete()) { endGame(); return; }
-  /* Si cerró cuadro → el bot puede mover de nuevo */
   if (closed > 0) setTimeout(botMove, BOT_DELAY);
   else currentTurn = 'player';
 }
@@ -1195,16 +902,12 @@ function botMove() {
 function getBotMove() {
   const available = getAvailableLines();
   if (!available.length) return null;
-
-  /* Capa 1: cierra cuadro si puede */
   for (const m of available) {
     claimLine(m.type, m.r, m.c, 2);
     const closed = countPotentialBoxes();
     unclaimLine(m.type, m.r, m.c);
     if (closed > 0) return m;
   }
-
-  /* Capa 2: evita dejar cuadros con 3 lados */
   const safe = available.filter(m => {
     claimLine(m.type, m.r, m.c, 2);
     const risky = hasThreeSidedBox();
@@ -1212,8 +915,6 @@ function getBotMove() {
     return !risky;
   });
   if (safe.length) return safe[Math.floor(Math.random() * safe.length)];
-
-  /* Capa 3: mueve aleatoriamente */
   return available[Math.floor(Math.random() * available.length)];
 }
 
@@ -1236,8 +937,7 @@ function hasThreeSidedBox() {
   for (let r = 0; r < GRID - 1; r++) {
     for (let c = 0; c < GRID - 1; c++) {
       if (!boxes[r][c]) {
-        const sides = (hLines[r][c] ? 1 : 0) + (hLines[r + 1][c] ? 1 : 0) +
-                      (vLines[r][c] ? 1 : 0) + (vLines[r][c + 1] ? 1 : 0);
+        const sides = (hLines[r][c] ? 1 : 0) + (hLines[r + 1][c] ? 1 : 0) + (vLines[r][c] ? 1 : 0) + (vLines[r][c + 1] ? 1 : 0);
         if (sides === 3) return true;
       }
     }
@@ -1249,7 +949,6 @@ function unclaimLine(type, r, c) {
   if (type === 'h') hLines[r][c] = 0; else vLines[r][c] = 0;
 }
 
-/* Verifica si todos los cuadros están cerrados */
 function isBoardComplete() {
   for (let r = 0; r < GRID - 1; r++)
     for (let c = 0; c < GRID - 1; c++)
@@ -1258,34 +957,181 @@ function isBoardComplete() {
 }
 
 /* ═══════════════════════════════════════════════════════════════════
-   INICIO Y EVENTOS — se ejecutan al cargar el DOM
+   I18N
+═══════════════════════════════════════════════════════════════════ */
+let currentLang = 'es';
+
+const eyebrowTranslations = {
+  es: ['Manufactura', 'Logística', 'Finanzas', 'Salud', 'Legal', 'E-commerce'],
+  en: ['Manufacturing', 'Logistics', 'Finance', 'Healthcare', 'Legal', 'E-commerce'],
+  ru: ['Производство', 'Логистика', 'Финансы', 'Здравоохранение', 'Юриспруденция', 'E-commerce']
+};
+
+function setLang(lang) {
+  currentLang = lang;
+  document.querySelectorAll(`[data-${lang}]`).forEach(el => {
+    const val = el.getAttribute(`data-${lang}`);
+    if (el.tagName === 'INPUT') el.placeholder = val;
+    else el.textContent = val;
+  });
+  const items = eyebrowTranslations[lang] || eyebrowTranslations.es;
+  document.querySelectorAll('.eyebrow-item').forEach((el, i) => { el.textContent = items[i] || ''; });
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('lang' + lang.charAt(0).toUpperCase() + lang.slice(1)).classList.add('active');
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   CHAT — AGENTE REAL CON CLAUDE API
+   ─────────────────────────────────────────────────────────────────
+   Lógica de cotización:
+   · Proyectos simples → da rango de precio directo en el chat
+   · Proyectos complejos o multi-sistema → agenda llamada via Calendly
+   · Siempre termina con un CTA claro
+═══════════════════════════════════════════════════════════════════ */
+
+// ⚠️  CONFIGURACIÓN — pon aquí tu link de Calendly real
+const CALENDLY_URL = 'https://calendly.com/disrupthings/30min';
+
+const SYSTEM_PROMPT = `Eres el agente de ventas y cotizaciones de DISRUPTHINGS, empresa de automatización e IA para PyMEs con sede en Ciudad de México.
+
+Tu trabajo es: entender qué proceso quiere automatizar el prospecto, evaluar la complejidad, y dar una cotización honesta o agendar una llamada.
+
+## SERVICIOS Y PRECIOS
+01. Automatización de Procesos: $800 – $8,000 USD (eliminar trabajo manual, conectar sistemas)
+02. Integración de Sistemas: $600 – $5,000 USD (APIs, bases de datos, SaaS)
+03. Agentes de IA: $1,500 – $12,000 USD (atención al cliente, análisis, decisiones automáticas)
+04. Automatización Financiera: $2,000 – $20,000 USD (conciliaciones, reportes, aprobaciones)
+05. Fractional CPO: $3,000 – $8,000 USD/mes (estrategia de producto e IA)
+06. Workshops: $800 – $3,500 USD (capacitación para equipos)
+
+## LÓGICA DE COTIZACIÓN
+- SIMPLE (1 sistema, flujo claro, sin integraciones complejas): da rango de precio directo del catálogo + tiempo estimado de entrega (1–3 semanas).
+- MEDIO (2–3 sistemas, algo de lógica custom): da rango orientativo y di que el precio exacto depende del diagnóstico. Ofrece llamada.
+- COMPLEJO (multi-sistema, IA, lógica de negocio profunda, o no entiendes bien el proceso): no inventes precio. Di que necesitas una llamada de 30 min para dar un número real. Link: ${CALENDLY_URL}
+
+## REGLAS DE CONVERSACIÓN
+- Respuestas cortas. Máximo 3–4 oraciones. Sin listas largas.
+- Tono: directo, técnico pero accesible. Nada de frases corporativas vacías.
+- Si el usuario pregunta algo que no es de cotización (ej. política, chistes, etc.): redirige amablemente al tema.
+- Siempre termina con una pregunta o un CTA claro.
+- No menciones competidores.
+- Responde en el idioma del usuario (español, inglés, o ruso).
+- Si el caso es complejo, incluye el link de Calendly como texto plano: ${CALENDLY_URL}
+- Si el usuario pide otra forma de contacto o hay algún problema, menciona el correo: disrupthings@gmail.com`;
+
+// Historial de conversación (para contexto multi-turno)
+let chatHistory = [];
+
+function setupChat() {
+  const sendBtn = document.getElementById('chatSend');
+  const input   = document.getElementById('chatInput');
+  const msgs    = document.getElementById('chatMessages');
+
+  function setLoading(isLoading) {
+    sendBtn.disabled = isLoading;
+    input.disabled   = isLoading;
+    sendBtn.textContent = isLoading ? '...' : 'Enviar';
+  }
+
+  function appendMsg(role, html) {
+    const div = document.createElement('div');
+    div.className = `msg ${role}`;
+    div.innerHTML = html;
+    msgs.appendChild(div);
+    msgs.scrollTop = msgs.scrollHeight;
+    return div;
+  }
+
+  function showTyping() {
+    const div = document.createElement('div');
+    div.className = 'msg bot typing-dots';
+    div.id = 'typingIndicator';
+    div.innerHTML = '<span></span><span></span><span></span>';
+    msgs.appendChild(div);
+    msgs.scrollTop = msgs.scrollHeight;
+  }
+
+  function removeTyping() {
+    const t = document.getElementById('typingIndicator');
+    if (t) t.remove();
+  }
+
+  // Convierte URLs en el texto a links clicables
+  function linkify(text) {
+    return text.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank" rel="noopener">$1</a>');
+  }
+
+  async function sendMessage() {
+    const text = input.value.trim();
+    if (!text || sendBtn.disabled) return;
+
+    // Agrega mensaje del usuario al UI y al historial
+    appendMsg('user', text);
+    chatHistory.push({ role: 'user', content: text });
+    input.value = '';
+
+    setLoading(true);
+    showTyping();
+
+    try {
+      const response = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-20250514',
+          max_tokens: 1000,
+          system: SYSTEM_PROMPT,
+          messages: chatHistory
+        })
+      });
+
+      const data = await response.json();
+
+      // Extrae el texto de la respuesta
+      const replyText = data.content
+        ? data.content.filter(b => b.type === 'text').map(b => b.text).join('')
+        : 'Hubo un error al procesar tu mensaje. Intenta de nuevo.';
+
+      // Agrega respuesta del agente al historial
+      chatHistory.push({ role: 'assistant', content: replyText });
+
+      removeTyping();
+      appendMsg('bot', linkify(replyText));
+
+    } catch (err) {
+      removeTyping();
+      appendMsg('bot', 'No pude conectarme. Escríbenos directo a <a href="mailto:disrupthings@gmail.com">disrupthings@gmail.com</a>');
+      console.error('Chat error:', err);
+    }
+
+    setLoading(false);
+    input.focus();
+  }
+
+  sendBtn.addEventListener('click', sendMessage);
+  input.addEventListener('keydown', e => { if (e.key === 'Enter') sendMessage(); });
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   INIT
 ═══════════════════════════════════════════════════════════════════ */
 window.addEventListener('DOMContentLoaded', () => {
   canvas = document.getElementById('timbiricheCanvas');
   ctx    = canvas.getContext('2d');
-
   resize();
   window.addEventListener('resize', resize);
-
-  /* ── Mostrar el HUD y arrancar el juego directamente (sin modal) ── */
   document.getElementById('gameScore').classList.add('active');
   initGame();
 
-  /* ── Botón "Jugar de nuevo" en el overlay de fin de tablero ── */
   document.getElementById('restartBtn').addEventListener('click', () => {
     document.getElementById('winOverlay').classList.remove('open');
     initGame();
   });
 
-  /* ── Modal de email (por si se reactiva en el futuro) ── */
   document.getElementById('startGameBtn').addEventListener('click', () => {
     const email = document.getElementById('playerEmail').value.trim();
     if (email) {
-      try {
-        setCookie('dt_email', email, 365);
-        playerName = email.split('@')[0];
-        setCookie('dt_name', playerName, 365);
-      } catch(e) {}
+      try { setCookie('dt_email', email, 365); playerName = email.split('@')[0]; setCookie('dt_name', playerName, 365); } catch(e) {}
     }
     document.getElementById('emailModal').classList.remove('open');
   });
@@ -1293,25 +1139,19 @@ window.addEventListener('DOMContentLoaded', () => {
     document.getElementById('emailModal').classList.remove('open');
   });
 
-  /* ── Interacción con el canvas: ratón ── */
   canvas.addEventListener('mousemove', e => {
     if (!gameActive || currentTurn !== 'player') return;
     const rect = canvas.getBoundingClientRect();
     hoverLine = getNearestLine(e.clientX - rect.left, e.clientY - rect.top);
     drawBoard();
   });
-  canvas.addEventListener('mouseleave', () => {
-    hoverLine = null;
-    if (gameActive) drawBoard();
-  });
+  canvas.addEventListener('mouseleave', () => { hoverLine = null; if (gameActive) drawBoard(); });
   canvas.addEventListener('click', e => {
     if (!gameActive || currentTurn !== 'player') return;
     const rect = canvas.getBoundingClientRect();
     const line = getNearestLine(e.clientX - rect.left, e.clientY - rect.top);
     if (line) playerMove(line.type, line.r, line.c);
   });
-
-  /* ── Interacción touch (móvil) ── */
   canvas.addEventListener('touchend', e => {
     e.preventDefault();
     if (!gameActive || currentTurn !== 'player') return;
@@ -1321,28 +1161,20 @@ window.addEventListener('DOMContentLoaded', () => {
     if (line) playerMove(line.type, line.r, line.c);
   }, { passive: false });
 
-  /* ── Nav: borde al hacer scroll ── */
   window.addEventListener('scroll', () => {
     document.getElementById('mainNav').classList.toggle('scrolled', window.scrollY > 20);
   });
 
-  /* ── Reveal on scroll para secciones ── */
   const observer = new IntersectionObserver(entries => {
     entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
   }, { threshold: 0.15 });
   document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-  /* ── Tagline: aparece 900ms después de cargar ── */
-  setTimeout(() => {
-    document.getElementById('heroTagline').classList.add('visible');
-  }, 900);
+  setTimeout(() => { document.getElementById('heroTagline').classList.add('visible'); }, 900);
 
   setupChat();
 });
 
-/* ═══════════════════════════════════════════════════════════════════
-   COOKIES — helpers simples
-═══════════════════════════════════════════════════════════════════ */
 function setCookie(name, val, days) {
   const d = new Date();
   d.setTime(d.getTime() + days * 86400000);
@@ -1353,113 +1185,6 @@ function getCookie(name) {
     if (s.startsWith(name + '=')) return decodeURIComponent(s.slice(name.length + 1));
   }
   return '';
-}
-
-/* ═══════════════════════════════════════════════════════════════════
-   I18N — internacionalización
-   currentLang → 'es' | 'en' | 'ru'
-   Para agregar un idioma: añadir botón en el nav + entradas data-XX en el HTML
-   + objeto en eyebrowTranslations + chatResponses.
-═══════════════════════════════════════════════════════════════════ */
-let currentLang = 'es';
-
-/* Traducciones del eyebrow de industrias en el hero */
-const eyebrowTranslations = {
-  es: ['Manufactura', 'Logística', 'Finanzas', 'Salud', 'Legal', 'E-commerce'],
-  en: ['Manufacturing', 'Logistics', 'Finance', 'Healthcare', 'Legal', 'E-commerce'],
-  ru: ['Производство', 'Логистика', 'Финансы', 'Здравоохранение', 'Юриспруденция', 'E-commerce']
-};
-
-function setLang(lang) {
-  currentLang = lang;
-
-  /* Actualiza todos los elementos con data-{lang} */
-  document.querySelectorAll(`[data-${lang}]`).forEach(el => {
-    const val = el.getAttribute(`data-${lang}`);
-    if (el.tagName === 'INPUT') el.placeholder = val;
-    else el.textContent = val;
-  });
-
-  /* Actualiza el eyebrow de industrias */
-  const items = eyebrowTranslations[lang] || eyebrowTranslations.es;
-  document.querySelectorAll('.eyebrow-item').forEach((el, i) => {
-    el.textContent = items[i] || '';
-  });
-
-  /* Actualiza botón activo de idioma */
-  document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById('lang' + lang.charAt(0).toUpperCase() + lang.slice(1))
-          .classList.add('active');
-}
-
-/* ═══════════════════════════════════════════════════════════════════
-   CHAT — respuestas simuladas del agente
-   TODO: reemplazar con llamadas al agente N8N real de cotizaciones.
-         El webhook de N8N recibirá el mensaje del usuario y responderá
-         con precio estimado, tiempo de entrega y CTA a Calendly.
-═══════════════════════════════════════════════════════════════════ */
-const chatResponses = {
-  es: [
-    "Podemos automatizar eso en menos de 2 semanas. ¿Quieres agendar una llamada?",
-    "Ese proceso es candidato perfecto para N8N + Claude. ROI típico: 3x en 60 días.",
-    "Hemos resuelto eso para empresas similares. El costo depende del volumen, pero arrancamos desde $800 USD.",
-    "Interesante caso de uso. Sí se puede automatizar completamente.",
-    "La mayoría de nuestros clientes recuperan la inversión en menos de 90 días."
-  ],
-  en: [
-    "We can automate that in under 2 weeks. Want to schedule a call?",
-    "That's a perfect fit for N8N + Claude. Typical ROI: 3x in 60 days.",
-    "We've solved this for similar companies. Cost depends on volume — starting from $800 USD.",
-    "Great use case. That can be fully automated.",
-    "Most of our clients recover their investment in under 90 days."
-  ],
-  ru: [
-    "Мы можем автоматизировать это менее чем за 2 недели. Запланируем звонок?",
-    "Этот процесс идеально подходит для N8N + Claude. Типичный ROI: 3x за 60 дней.",
-    "Мы решали это для похожих компаний. Стоимость зависит от объёма — от $800 USD.",
-    "Интересный кейс. Это полностью поддаётся автоматизации.",
-    "Большинство наших клиентов окупают вложения менее чем за 90 дней."
-  ]
-};
-
-function setupChat() {
-  const send  = document.getElementById('chatSend');
-  const input = document.getElementById('chatInput');
-  const msgs  = document.getElementById('chatMessages');
-
-  function sendMessage() {
-    const text = input.value.trim();
-    if (!text) return;
-
-    /* Mensaje del usuario */
-    const userMsg = document.createElement('div');
-    userMsg.className = 'msg user';
-    userMsg.textContent = text;
-    msgs.appendChild(userMsg);
-    input.value = '';
-    msgs.scrollTop = msgs.scrollHeight;
-
-    /* Indicador de escritura */
-    const typing = document.createElement('div');
-    typing.className = 'msg bot typing-dots';
-    typing.innerHTML = '<span></span><span></span><span></span>';
-    msgs.appendChild(typing);
-    msgs.scrollTop = msgs.scrollHeight;
-
-    /* Respuesta del agente (simulada) */
-    setTimeout(() => {
-      typing.remove();
-      const botMsg = document.createElement('div');
-      botMsg.className = 'msg bot';
-      const pool = chatResponses[currentLang] || chatResponses.es;
-      botMsg.textContent = pool[Math.floor(Math.random() * pool.length)];
-      msgs.appendChild(botMsg);
-      msgs.scrollTop = msgs.scrollHeight;
-    }, 1200);
-  }
-
-  send.addEventListener('click', sendMessage);
-  input.addEventListener('keydown', e => { if (e.key === 'Enter') sendMessage(); });
 }
 </script>
 </body>
