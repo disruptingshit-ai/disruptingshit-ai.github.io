@@ -3,7 +3,108 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DISRUPTHINGS — Automatización e IA</title>
+
+<!-- ── SEO BÁSICO ── -->
+<title>DISRUPTHINGS — Automatización e IA para PyMEs</title>
+<meta name="description" content="Construimos el equipo invisible de tu empresa. Automatización de procesos, integración de sistemas y agentes de IA para PyMEs. Entregamos en semanas, no meses.">
+<meta name="keywords" content="automatización de procesos, inteligencia artificial empresas, agentes IA, integración de sistemas, n8n, automatización PyMEs, automatización México">
+<meta name="author" content="DISRUPTHINGS">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://disrupthings.com/">
+
+<!-- ── OPEN GRAPH (Facebook, LinkedIn, WhatsApp) ── -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://disrupthings.com/">
+<meta property="og:title" content="DISRUPTHINGS — Automatización e IA para PyMEs">
+<meta property="og:description" content="Construimos el equipo invisible de tu empresa. Automatización de procesos, integración de sistemas y agentes de IA. Entregamos en semanas, no meses.">
+<meta property="og:image" content="https://disrupthings.com/og-image.png">
+<meta property="og:locale" content="es_MX">
+<meta property="og:site_name" content="DISRUPTHINGS">
+
+<!-- ── TWITTER / X CARD ── -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@disrupthings">
+<meta name="twitter:title" content="DISRUPTHINGS — Automatización e IA para PyMEs">
+<meta name="twitter:description" content="Construimos el equipo invisible de tu empresa. Automatización de procesos e IA para PyMEs.">
+<meta name="twitter:image" content="https://disrupthings.com/og-image.png">
+
+<!-- ── SCHEMA.ORG — Organización ── -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "DISRUPTHINGS",
+  "url": "https://disrupthings.com",
+  "logo": "https://disrupthings.com/logo.png",
+  "description": "Empresa de automatización e inteligencia artificial para PyMEs. Construimos sistemas que trabajan solos.",
+  "foundingDate": "2025",
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "Ciudad de México",
+    "addressCountry": "MX"
+  },
+  "contactPoint": {
+    "@type": "ContactPoint",
+    "email": "hola@disrupthings.com",
+    "contactType": "sales",
+    "availableLanguage": ["Spanish", "English", "Russian"]
+  },
+  "sameAs": [
+    "https://x.com/disrupthings",
+    "https://instagram.com/disrupthings",
+    "https://facebook.com/disrupthings",
+    "https://tiktok.com/@disrupthings",
+    "https://linkedin.com/company/disrupthings"
+  ],
+  "offers": [
+    {
+      "@type": "Offer",
+      "name": "Automatización de Procesos",
+      "priceCurrency": "USD",
+      "priceRange": "$800-$8000"
+    },
+    {
+      "@type": "Offer",
+      "name": "Agentes de IA",
+      "priceCurrency": "USD",
+      "priceRange": "$1500-$12000"
+    },
+    {
+      "@type": "Offer",
+      "name": "Integración de Sistemas",
+      "priceCurrency": "USD",
+      "priceRange": "$600-$5000"
+    }
+  ]
+}
+</script>
+
+<!-- ── SCHEMA.ORG — Servicio local ── -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ProfessionalService",
+  "name": "DISRUPTHINGS",
+  "url": "https://disrupthings.com",
+  "telephone": "+525534844790",
+  "email": "hola@disrupthings.com",
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "Ciudad de México",
+    "addressRegion": "CDMX",
+    "addressCountry": "MX"
+  },
+  "geo": {
+    "@type": "GeoCoordinates",
+    "latitude": "19.4326",
+    "longitude": "-99.1332"
+  },
+  "openingHours": "Mo-Fr 09:00-18:00",
+  "priceRange": "$$",
+  "servesCuisine": null,
+  "description": "Automatización de procesos e inteligencia artificial para empresas. Agentes de IA, integración de sistemas y automatización financiera."
+}
+</script>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&display=swap');
 
@@ -247,9 +348,9 @@
     <li><a href="#contact"     data-es="Contacto"   data-en="Contact"    data-ru="Контакт">Contacto</a></li>
   </ul>
   <div class="nav-right">
-    <button class="lang-btn active" id="langEs" onclick="setLang('es')">ES</button>
-    <button class="lang-btn"        id="langEn" onclick="setLang('en')">EN</button>
-    <button class="lang-btn"        id="langRu" onclick="setLang('ru')">РУ</button>
+    <button class="lang-btn active" id="langEs" onclick="window._langManuallySet=true; setLang('es')">ES</button>
+    <button class="lang-btn"        id="langEn" onclick="window._langManuallySet=true; setLang('en')">EN</button>
+    <button class="lang-btn"        id="langRu" onclick="window._langManuallySet=true; setLang('ru')">РУ</button>
   </div>
 </nav>
 
@@ -412,10 +513,10 @@
           <span class="chat-status">● ONLINE</span>
         </div>
         <div class="chat-messages" id="chatMessages">
-          <div class="msg bot">Cuéntame qué proceso quieres automatizar y te damos una estimación real de costo y tiempo. Podemos ayudarte con reportes, integraciones, atención al cliente, facturación o cualquier tarea repetitiva de tu operación.</div>
+          <div class="msg bot" id="chatWelcome">Cuéntame qué proceso quieres automatizar y te damos una estimación real de costo y tiempo. Podemos ayudarte con reportes, integraciones, atención al cliente, facturación o cualquier tarea repetitiva de tu operación.</div>
         </div>
         <div class="chat-input-area">
-          <input type="text" class="chat-input" id="chatInput" placeholder="Describe el proceso que quieres automatizar...">
+          <input type="text" class="chat-input" id="chatInput" data-es="Describe el proceso que quieres automatizar..." data-en="Describe the process you want to automate..." data-ru="Опишите процесс, который хотите автоматизировать..." placeholder="Describe el proceso que quieres automatizar...">
           <button class="chat-send" id="chatSend">Enviar</button>
         </div>
       </div>
@@ -586,13 +687,69 @@ const eyebrowTranslations = {
   en: ['Manufacturing','Logistics','Finance','Healthcare','Legal','E-commerce'],
   ru: ['Производство','Логистика','Финансы','Здравоохранение','Юриспруденция','E-commerce']
 };
+/* Chat welcome messages per language */
+const chatWelcome = {
+  es: 'Cuéntame qué proceso quieres automatizar y te damos una estimación real de costo y tiempo. Podemos ayudarte con reportes, integraciones, atención al cliente, facturación o cualquier tarea repetitiva de tu operación.',
+  en: "Tell me which process you want to automate and we'll give you a real cost and time estimate. We can help with reports, integrations, customer support, billing, or any repetitive task in your operation.",
+  ru: 'Расскажите, какой процесс вы хотите автоматизировать, и мы дадим реальную оценку стоимости и сроков. Поможем с отчётами, интеграциями, поддержкой клиентов, выставлением счетов и любыми повторяющимися задачами.'
+};
+
 function setLang(lang) {
-  currentLang=lang;
-  document.querySelectorAll(`[data-${lang}]`).forEach(el=>{const val=el.getAttribute(`data-${lang}`);if(el.tagName==='INPUT')el.placeholder=val;else el.textContent=val;});
-  const items=eyebrowTranslations[lang]||eyebrowTranslations.es;
-  document.querySelectorAll('.eyebrow-item').forEach((el,i)=>{el.textContent=items[i]||'';});
-  document.querySelectorAll('.lang-btn').forEach(b=>b.classList.remove('active'));
-  document.getElementById('lang'+lang.charAt(0).toUpperCase()+lang.slice(1)).classList.add('active');
+  currentLang = lang;
+
+  /* Update all data-{lang} elements */
+  document.querySelectorAll(`[data-${lang}]`).forEach(el => {
+    const val = el.getAttribute(`data-${lang}`);
+    if (el.tagName === 'INPUT') el.placeholder = val;
+    else el.textContent = val;
+  });
+
+  /* Update eyebrow industries */
+  const items = eyebrowTranslations[lang] || eyebrowTranslations.es;
+  document.querySelectorAll('.eyebrow-item').forEach((el, i) => { el.textContent = items[i] || ''; });
+
+  /* Update active lang button */
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+  const btnId = 'lang' + lang.charAt(0).toUpperCase() + lang.slice(1);
+  const btn = document.getElementById(btnId);
+  if (btn) btn.classList.add('active');
+
+  /* Update chat welcome message (only if chat is still at initial state) */
+  const welcome = document.getElementById('chatWelcome');
+  if (welcome) welcome.textContent = chatWelcome[lang] || chatWelcome.es;
+
+  /* Update chat input placeholder */
+  const chatInput = document.getElementById('chatInput');
+  if (chatInput) {
+    const ph = chatInput.getAttribute(`data-${lang}`);
+    if (ph) chatInput.placeholder = ph;
+  }
+}
+
+/* IP-based language detection */
+async function detectLangByIP() {
+  try {
+    const res = await fetch('https://ipapi.co/json/', { signal: AbortSignal.timeout(3000) });
+    const data = await res.json();
+    const country = data.country_code || '';
+    const continent = data.continent_code || '';
+
+    /* Latin America + Mexico → ES */
+    const esCountries = ['MX','GT','BZ','HN','SV','NI','CR','PA','CU','DO','PR','CO','VE','EC','PE','BO','PY','UY','AR','CL','GY','SR'];
+    /* Europe + North America + Oceania → EN */
+    const enContinents = ['EU','NA','OC'];
+    /* Everything else → RU (Asia, Middle East, Africa) */
+
+    let detectedLang = 'ru';
+    if (esCountries.includes(country)) detectedLang = 'es';
+    else if (enContinents.includes(continent)) detectedLang = 'en';
+
+    /* Only auto-set if user hasn't manually changed language */
+    if (!window._langManuallySet) setLang(detectedLang);
+  } catch(e) {
+    /* Fallback to Spanish on any error */
+    if (!window._langManuallySet) setLang('es');
+  }
 }
 
 /* ═══════════════════════════════════════════
@@ -724,6 +881,9 @@ window.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
   setTimeout(() => { document.getElementById('heroTagline').classList.add('visible'); }, 900);
+
+  /* Detect language by IP — runs after page loads */
+  detectLangByIP();
 
   setupChat();
 });
