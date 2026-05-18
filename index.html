@@ -203,13 +203,13 @@
   .section-label { font-size: 9px; letter-spacing: 4px; color: var(--orange); text-transform: uppercase; margin-bottom: 14px; font-weight: 600; }
   .section-title { font-size: clamp(26px, 3.2vw, 42px); font-weight: 800; line-height: 1.05; letter-spacing: -1.5px; margin-bottom: 18px; color: #FFFFFF; }
   /* ↓ FIX: section-desc era #AAAAAA muy tenue — subimos a #CCCCCC y 13.5px */
-  .section-desc { font-size: 13.5px; color: #CCCCCC; max-width: 440px; line-height: 1.9; font-weight: 300; }
+  .section-desc { font-size: 14px; color: #CCCCCC; max-width: 480px; line-height: 2.1; font-weight: 300; }
 
   /* ── SERVICES ── */
   #services { background: var(--surface); }
   .services-header { display: grid; grid-template-columns: 1fr 1fr; gap: 72px; align-items: end; margin-bottom: 56px; }
   .services-grid { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--dim); }
-  .service-card { padding: 28px 24px; border-right: 1px solid var(--dim); border-bottom: 1px solid var(--dim); transition: background 0.25s; cursor: default; position: relative; }
+  .service-card { padding: 32px 28px; border-right: 1px solid var(--dim); border-bottom: 1px solid var(--dim); transition: background 0.25s; cursor: default; position: relative; }
   .service-card:nth-child(3n) { border-right: none; }
   .service-card::after { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: var(--orange); transform: scaleX(0); transform-origin: left; transition: transform 0.3s; }
   .service-card:hover { background: #191919; }
@@ -217,7 +217,7 @@
   .service-num   { font-size: 9px; letter-spacing: 2px; color: #555555; margin-bottom: 14px; font-family: 'DM Mono', monospace; }
   .service-name  { font-size: 14px; font-weight: 700; margin-bottom: 9px; line-height: 1.3; color: #EEEEEE; }
   /* ↓ FIX: service-desc subido de #888 a #BBBBBB */
-  .service-desc  { font-size: 12.5px; color: #BBBBBB; line-height: 1.8; font-weight: 300; margin-bottom: 18px; }
+  .service-desc  { font-size: 13px; color: #CCCCCC; line-height: 2; font-weight: 300; margin-bottom: 20px; letter-spacing: 0.1px; }
   .service-price { font-size: 11px; color: var(--orange); font-family: 'DM Mono', monospace; font-weight: 500; }
 
   /* ── COST STATS STRIP ── */
@@ -228,7 +228,7 @@
   .stat-block::before { content: ''; position: absolute; top: 0; left: 0; width: 2px; height: 40px; background: var(--orange); }
   .stat-number { font-size: clamp(36px, 4vw, 52px); font-weight: 900; color: #FFFFFF; letter-spacing: -2px; line-height: 1; margin-bottom: 6px; font-family: 'DM Mono', monospace; }
   .stat-number span { color: var(--orange); }
-  .stat-label  { font-size: 12px; color: #CCCCCC; line-height: 1.7; font-weight: 300; margin-bottom: 10px; }
+  .stat-label  { font-size: 13px; color: #CCCCCC; line-height: 1.9; font-weight: 300; margin-bottom: 12px; }
   .stat-sub    { font-size: 10px; color: #666; letter-spacing: 1px; font-family: 'DM Mono', monospace; text-transform: uppercase; }
 
   /* ── INDUSTRIES ── */
@@ -241,10 +241,10 @@
   .industry-dot  { width: 4px; height: 4px; border-radius: 50%; background: #444; flex-shrink: 0; transition: background 0.2s; }
   /* ↓ FIX: industry-name de #AAAAAA a #CCCCCC, tamaño 15→16px */
   .industry-name { font-size: 16px; font-weight: 300; color: #CCCCCC; letter-spacing: -0.2px; transition: color 0.2s; }
-  .industries-right { padding: 36px; background: var(--surface); }
+  .industries-right { padding: 40px; background: var(--surface); }
   .industries-stat       { font-size: 52px; font-weight: 900; color: var(--orange); line-height: 1; margin-bottom: 6px; letter-spacing: -2px; }
   /* ↓ FIX: stat-label de #888 a #BBBBBB */
-  .industries-stat-label { font-size: 12px; color: #BBBBBB; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 28px; line-height: 1.9; font-weight: 400; }
+  .industries-stat-label { font-size: 13px; color: #CCCCCC; letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 28px; line-height: 2; font-weight: 400; }
   /* ↓ FIX: quote — sin italic, más grande, borde naranja izquierdo */
   .industries-quote { font-size: 15px; line-height: 1.9; color: #AAAAAA; font-weight: 400; font-style: normal; border-left: 2px solid var(--orange); padding-left: 16px; }
 
@@ -276,7 +276,7 @@
   .chat-send:disabled { opacity: 0.3; cursor: not-allowed; }
   .chat-input:disabled { opacity: 0.5; }
   /* ↓ FIX: pricing-note de #666 a #BBBBBB */
-  .pricing-note { font-size: 13px; color: #BBBBBB; letter-spacing: 0.2px; margin-bottom: 24px; line-height: 1.9; font-weight: 300; }
+  .pricing-note { font-size: 14px; color: #CCCCCC; letter-spacing: 0.2px; margin-bottom: 28px; line-height: 2.1; font-weight: 300; }
   /* Tech badges — solo visual, sin cursor */
   .pricing-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px; }
   .tag { padding: 6px 12px; border: 1px solid var(--dim); font-size: 9px; letter-spacing: 2px; color: #777; text-transform: uppercase; font-weight: 500; cursor: default; }
@@ -409,43 +409,43 @@
         <p class="section-label" data-es="Lo que construimos" data-en="What we build" data-ru="Что мы создаём">Lo que construimos</p>
         <h2 class="section-title" data-es="Sistemas que trabajan solos." data-en="Systems that run themselves." data-ru="Системы, работающие самостоятельно.">Sistemas que trabajan solos.</h2>
       </div>
-      <p class="section-desc" data-es="No vendemos software. Vendemos procesos que funcionan solos — desde un flujo administrativo hasta operaciones complejas de múltiples sistemas." data-en="We don't sell software. We sell self-running processes — from a single admin workflow to complex multi-system operations." data-ru="Мы не продаём ПО. Мы продаём процессы, которые работают сами — от простого административного потока до сложных многосистемных операций.">No vendemos software. Vendemos procesos que funcionan solos — desde un flujo administrativo hasta operaciones complejas de múltiples sistemas.</p>
+      <p class="section-desc" data-es="No vendemos software. Vendemos procesos que funcionan solos — desde un flujo administrativo hasta operaciones complejas de múltiples sistemas." data-en="We don't sell software. We sell self-running processes — from a single admin workflow to complex multi-system operations." data-ru="Мы не продаём ПО. Мы продаём процессы, которые работают сами — от простого административного потока до сложных многосистемных операций.">No vendemos software. Vendemos procesos que funcionan solos.</p>
     </div>
     <div class="services-grid reveal">
       <div class="service-card">
         <p class="service-num">01</p>
         <h3 class="service-name" data-es="Automatización de Procesos" data-en="Process Automation" data-ru="Автоматизация процессов">Automatización de Procesos</h3>
-        <p class="service-desc" data-es="Eliminamos trabajo manual. Conectamos sistemas. Tu equipo se enfoca en decisiones, no en capturas." data-en="We eliminate manual work. Your team focuses on decisions, not data entry." data-ru="Устраняем ручной труд. Команда сосредотачивается на решениях, а не на рутине.">Eliminamos trabajo manual. Conectamos sistemas. Tu equipo se enfoca en decisiones, no en capturas.</p>
+        <p class="service-desc" data-es="Menos capturas. Menos errores. Tu equipo enfocado en lo que importa." data-en="Less manual work. Fewer errors. Your team focused on what matters." data-ru="Устраняем ручной труд. Команда сосредотачивается на решениях, а не на рутине.">Menos capturas. Menos errores. Tu equipo enfocado en lo que importa.</p>
         <p class="service-price">$800 – $8,000 USD</p>
       </div>
       <div class="service-card">
         <p class="service-num">02</p>
         <h3 class="service-name" data-es="Integración de Sistemas" data-en="Systems Integration" data-ru="Интеграция систем">Integración de Sistemas</h3>
-        <p class="service-desc" data-es="APIs, bases de datos, plataformas SaaS. Los conectamos para que la información fluya sola, sin intervención humana." data-en="APIs, databases, SaaS platforms. Connected so data flows without anyone touching it." data-ru="API, базы данных, SaaS. Данные передаются сами, без участия людей.">APIs, bases de datos, plataformas SaaS. Los conectamos para que la información fluya sola, sin intervención humana.</p>
+        <p class="service-desc" data-es="Tus sistemas hablando entre sí. Sin intervención humana." data-en="APIs, databases, SaaS platforms. Connected so data flows without anyone touching it." data-ru="API, базы данных, SaaS. Данные передаются сами, без участия людей.">Tus sistemas hablando entre sí. Sin intervención humana.</p>
         <p class="service-price">$600 – $5,000 USD</p>
       </div>
       <div class="service-card">
         <p class="service-num">03</p>
         <h3 class="service-name" data-es="Agentes de IA" data-en="AI Agents" data-ru="ИИ-агенты">Agentes de IA</h3>
-        <p class="service-desc" data-es="Agentes que piensan, deciden y ejecutan. Desde atención al cliente hasta análisis financiero — sin ocupar a nadie de tu equipo." data-en="Agents that reason, decide and act — without occupying anyone on your team." data-ru="Агенты, которые анализируют и действуют — не занимая никого из команды.">Agentes que piensan, deciden y ejecutan. Desde atención al cliente hasta análisis financiero — sin ocupar a nadie de tu equipo.</p>
+        <p class="service-desc" data-es="Piensan, deciden y actúan. Tu equipo libre para lo que solo un humano puede hacer." data-en="Agents that reason, decide and act — without occupying anyone on your team." data-ru="Агенты, которые анализируют и действуют — не занимая никого из команды.">Piensan, deciden y actúan. Tu equipo libre para lo que solo un humano puede hacer.</p>
         <p class="service-price">$1,500 – $12,000 USD</p>
       </div>
       <div class="service-card">
         <p class="service-num">04</p>
         <h3 class="service-name" data-es="Automatización Financiera" data-en="Financial Automation" data-ru="Финансовая автоматизация">Automatización Financiera</h3>
-        <p class="service-desc" data-es="Conciliaciones, reportes y aprobaciones que se generan solos. Tu equipo contable enfocado en análisis, no en Excel." data-en="Reconciliations, reports and approvals that generate themselves. Your finance team focused on analysis, not spreadsheets." data-ru="Сверки, отчёты и согласования без ручного труда. Финансовая команда — на анализе, не на таблицах.">Conciliaciones, reportes y aprobaciones que se generan solos. Tu equipo contable enfocado en análisis, no en Excel.</p>
+        <p class="service-desc" data-es="Reportes y conciliaciones que se generan solos. Sin Excel manual." data-en="Reconciliations, reports and approvals that generate themselves. Your finance team focused on analysis, not spreadsheets." data-ru="Сверки, отчёты и согласования без ручного труда. Финансовая команда — на анализе, не на таблицах.">Reportes y conciliaciones que se generan solos. Sin Excel manual.</p>
         <p class="service-price">$2,000 – $20,000 USD</p>
       </div>
       <div class="service-card">
         <p class="service-num">05</p>
         <h3 class="service-name" data-es="Fractional CPO" data-en="Fractional CPO" data-ru="Fractional CPO">Fractional CPO</h3>
-        <p class="service-desc" data-es="Estrategia de producto e IA como servicio. Experiencia corporativa para PyMEs que quieren crecer sin contratar un director de tiempo completo." data-en="Product and AI strategy as a service. Enterprise expertise for SMBs that want to grow without a full-time director." data-ru="Стратегия продукта и ИИ как услуга. Корпоративный опыт — без штатного директора.">Estrategia de producto e IA como servicio. Experiencia corporativa para PyMEs que quieren crecer sin contratar un director de tiempo completo.</p>
+        <p class="service-desc" data-es="Dirección de producto e IA cuando la necesitas. Sin contratar de tiempo completo." data-en="Product and AI strategy as a service. Enterprise expertise for SMBs that want to grow without a full-time director." data-ru="Стратегия продукта и ИИ как услуга. Корпоративный опыт — без штатного директора.">Dirección de producto e IA cuando la necesitas. Sin contratar de tiempo completo.</p>
         <p class="service-price">$3,000 – $8,000 / mes</p>
       </div>
       <div class="service-card">
         <p class="service-num">06</p>
         <h3 class="service-name" data-es="Workshops" data-en="Workshops" data-ru="Воркшопы">Workshops</h3>
-        <p class="service-desc" data-es="Sesiones intensivas para que tu equipo sepa qué automatizar, cómo pedirlo y cómo medir el resultado." data-en="Intensive sessions so your team knows what to automate, how to request it, and how to measure results." data-ru="Интенсивы, чтобы команда знала что автоматизировать и как это измерять.">Sesiones intensivas para que tu equipo sepa qué automatizar, cómo pedirlo y cómo medir el resultado.</p>
+        <p class="service-desc" data-es="Tu equipo aprende qué automatizar y cómo medirlo. En un día." data-en="Intensive sessions so your team knows what to automate, how to request it, and how to measure results." data-ru="Интенсивы, чтобы команда знала что автоматизировать и как это измерять.">Tu equipo aprende qué automatizar y cómo medirlo. En un día.</p>
         <p class="service-price">$800 – $3,500 USD</p>
       </div>
     </div>
@@ -458,17 +458,17 @@
     <div class="stats-grid reveal">
       <div class="stat-block">
         <div class="stat-number"><span>15</span> hrs</div>
-        <p class="stat-label">Las horas semanales promedio que un operativo dedica a tareas repetitivas — reportes, capturas, seguimientos — en vez de a su trabajo real.</p>
-        <p class="stat-sub">~$8,200 MXN / mes en tiempo recuperable</p>
+        <p class="stat-label">Horas semanales que un operativo dedica a tareas repetitivas en vez de a su trabajo real.</p>
+        <p class="stat-sub">~$8,200 MXN/mes en tiempo recuperable</p>
       </div>
       <div class="stat-block">
         <div class="stat-number"><span>$218</span></div>
-        <p class="stat-label">El costo por hora de un operativo o analista en México. Cada hora en tareas automatizables es dinero que tu empresa no debería estar gastando así.</p>
+        <p class="stat-label">Costo por hora de un operativo en México. Cada hora en tareas automatizables es dinero mal gastado.</p>
         <p class="stat-sub">Basado en sueldo promedio $35,000 MXN/mes</p>
       </div>
       <div class="stat-block">
         <div class="stat-number"><span>3×</span></div>
-        <p class="stat-label">El ROI típico en los primeros 60 días. No porque recortes gente — sino porque esas horas se reinvierten en lo que solo un humano puede hacer.</p>
+        <p class="stat-label">ROI típico en los primeros 60 días. Las horas recuperadas se reinvierten en lo que solo un humano puede hacer.</p>
         <p class="stat-sub">Promedio en clientes DISRUPTHINGS 2024–2025</p>
       </div>
     </div>
@@ -493,8 +493,8 @@
       </div>
       <div class="industries-right">
         <div class="industries-stat">73%</div>
-        <p class="industries-stat-label" data-es="de PyMEs pierden más de 10 horas semanales en tareas que podrían estar haciendo sus sistemas." data-en="of SMBs waste 10+ hours weekly on tasks their systems could handle." data-ru="малого и среднего бизнеса теряют 10+ часов в неделю на задачи, которые могли бы выполнять системы.">de PyMEs pierden más de 10 horas semanales en tareas que podrían estar haciendo sus sistemas.</p>
-        <p class="industries-quote" data-es='"Tu equipo no necesita hacer más. Necesita hacer lo que solo él puede hacer."' data-en='"Your team doesn&apos;t need to do more. It needs to do what only humans can."' data-ru='"Вашей команде не нужно делать больше. Ей нужно делать то, что может только человек."'>"Tu equipo no necesita hacer más. Necesita hacer lo que solo él puede hacer."</p>
+        <p class="industries-stat-label" data-es="de PyMEs pierden más de 10 horas semanales en tareas que podrían estar haciendo sus sistemas." data-en="of SMBs waste 10+ hours weekly on tasks their systems could handle." data-ru="малого и среднего бизнеса теряют 10+ часов в неделю на задачи, которые могли бы выполнять системы.">de PyMEs gastan más de 10 hrs/semana en tareas que sus sistemas podrían hacer solos.</p>
+        <p class="industries-quote" data-es='"Tu equipo no necesita hacer más. Necesita hacer lo que solo él puede hacer."' data-en='"Your team doesn&apos;t need to do more. It needs to do what only humans can."' data-ru='"Вашей команде не нужно делать больше. Ей нужно делать то, что может только человек."'>"Automatiza lo repetible. Libera lo humano."</p>
       </div>
     </div>
   </div>
@@ -513,7 +513,7 @@
           <span class="chat-status">● ONLINE</span>
         </div>
         <div class="chat-messages" id="chatMessages">
-          <div class="msg bot" id="chatWelcome">Cuéntame qué proceso quieres automatizar y te damos una estimación real de costo y tiempo. Podemos ayudarte con reportes, integraciones, atención al cliente, facturación o cualquier tarea repetitiva de tu operación.</div>
+          <div class="msg bot" id="chatWelcome">Cuéntame qué proceso quieres automatizar. Te damos un estimado real de costo y tiempo — sin compromiso.</div>
         </div>
         <div class="chat-input-area">
           <input type="text" class="chat-input" id="chatInput" data-es="Describe el proceso que quieres automatizar..." data-en="Describe the process you want to automate..." data-ru="Опишите процесс, который хотите автоматизировать..." placeholder="Describe el proceso que quieres automatizar...">
@@ -523,7 +523,7 @@
       <div class="pricing-info">
         <p class="section-label" data-es="Cómo trabajamos" data-en="How we work" data-ru="Как мы работаем">Cómo trabajamos</p>
         <h2 class="section-title" data-es="Sin retainers forzados." data-en="No forced retainers." data-ru="Без навязанных контрактов.">Sin retainers forzados.</h2>
-        <p class="pricing-note" data-es="Proyectos fijos o mensualidades. Entregamos en semanas, no meses. Cada automatización tiene ROI medible antes de firmar." data-en="Fixed-scope projects or monthly retainers. We deliver in weeks, not months. Every automation comes with a measurable ROI before you sign." data-ru="Фиксированные проекты или ежемесячные подписки. Сдаём за недели, а не месяцы.">Proyectos fijos o mensualidades. Entregamos en semanas, no meses. Cada automatización tiene ROI medible antes de firmar.</p>
+        <p class="pricing-note" data-es="Proyectos fijos o mensualidades. Entregamos en semanas, no meses. Cada automatización tiene ROI medible antes de firmar." data-en="Fixed-scope projects or monthly retainers. We deliver in weeks, not months. Every automation comes with a measurable ROI before you sign." data-ru="Фиксированные проекты или ежемесячные подписки. Сдаём за недели, а не месяцы.">Precio fijo o mensualidad. Entregamos en semanas. ROI medible antes de firmar.</p>
         <div class="pricing-tags">
           <span class="tag">N8N</span>
           <span class="tag">Make</span>
@@ -689,9 +689,9 @@ const eyebrowTranslations = {
 };
 /* Chat welcome messages per language */
 const chatWelcome = {
-  es: 'Cuéntame qué proceso quieres automatizar y te damos una estimación real de costo y tiempo. Podemos ayudarte con reportes, integraciones, atención al cliente, facturación o cualquier tarea repetitiva de tu operación.',
-  en: "Tell me which process you want to automate and we'll give you a real cost and time estimate. We can help with reports, integrations, customer support, billing, or any repetitive task in your operation.",
-  ru: 'Расскажите, какой процесс вы хотите автоматизировать, и мы дадим реальную оценку стоимости и сроков. Поможем с отчётами, интеграциями, поддержкой клиентов, выставлением счетов и любыми повторяющимися задачами.'
+  es: 'Cuéntame qué proceso quieres automatizar. Te damos un estimado real de costo y tiempo — sin compromiso.',
+  en: "Tell me which process you want to automate. We'll give you a real cost and time estimate — no commitment required.",
+  ru: 'Расскажите, какой процесс хотите автоматизировать. Дадим реальную оценку стоимости и сроков — без обязательств.'
 };
 
 function setLang(lang) {
